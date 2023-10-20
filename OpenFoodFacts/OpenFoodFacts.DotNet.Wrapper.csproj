@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<description>C# Wrapper for OpenFoodFacts.</description>
+		<Company />
+		<PackageId>OpenFoodFacts.DotNet.Wrapper</PackageId>
+		<AssemblyName>OpenFoodFacts.DotNet.Wrapper</AssemblyName>
+		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+		<PackageProjectUrl>https://github.com/manishtiwari25/openfoodfacts-dotnet</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/manishtiwari25/openfoodfacts-dotnet</RepositoryUrl>
+		<RepositoryType>github</RepositoryType>
+		<Title>OpenFoodFacts.DotNet.Wrapper</Title>
+		<Tags>OpenFoodFacts;openfoodfect</Tags>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Authors>Manish Tiwari</Authors>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
+	</ItemGroup>
+</Project>

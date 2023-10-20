@@ -1,0 +1,157 @@
+﻿@page "/ingredients"
+
+@using DianabolDB.Data
+@using DianabolDB.Service
+@inject DianabolService DianabolService
+@inject NotificationService NotificationService
+
+@if (!ShowEdit)
+{
+
+    <RadzenDataGrid AllowFiltering="true"
+                AllowColumnResize="true"
+                AllowAlternatingRows="false"
+                FilterMode="FilterMode.Advanced"
+                AllowSorting="true"
+                PageSize="20"
+                AllowPaging="false"
+                PagerHorizontalAlign="HorizontalAlign.Left"
+                ShowPagingSummary="true"
+                Data="@Ingredients"
+                TItem="Meal"
+                LogicalFilterOperator="LogicalFilterOperator.Or"
+                SelectionMode="DataGridSelectionMode.Single"
+                Style="max-height:70vh;overflow:auto"
+                ExpandMode="DataGridExpandMode.Multiple">
+        <Template Context="data">
+            <RadzenCard class="m-0 p-2" Style="overflow:auto">
+                <span class="rz-color-secondary">@(data.Name)</span><br>
+                <span class="rz-color-white">@(data.Calories + " kcal / " + data.Weight + "g")</span><br>
+                <span class="rz-color-white">@(data.Carbohydrates + " g carbohydrates / " + data.Weight + "g")</span><br>
+                <span class="rz-color-white">@(data.Fat + " g fat / " + data.Weight + "g")</span><br>
+                <span class="rz-color-white">@(data.Protein + " g protein / " + data.Weight + "g")</span><br>
+            </RadzenCard>
+        </Template>
+        <Columns>
+            <RadzenDataGridColumn TItem="Meal" Property="Name" Title="Name" Filterable="true" />
+            <RadzenDataGridColumn TItem="Meal" Property="Calories" Title="kcal" Filterable="true" Width="85px" />
+            <RadzenDataGridColumn TItem="Meal" Title="" Filterable="false" Width="100px" TextAlign="TextAlign.Center">
+                <Template>
+                    <RadzenButton Click=@(() => NewMeal(context)) Icon="edit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Medium" class="rz-border-radius-0 m-0 me-2" />
+                    <RadzenButton Click=@(() => RemoveMeal(context)) Icon="delete" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Medium" class="rz-border-radius-0 m-0" />
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+
+    <RadzenButton Click=@(args => NewMeal(new Meal())) Icon="add" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" class="rz-border-radius-0 rz-shadow-10 fixed-bottom m-3 " />
+
+}
+else
+{
+    <RadzenTemplateForm Data="@EditMeal" Submit="@((Meal args) => { SaveMeal(args); })">
+        <RadzenStack Gap="1rem">
+            <RadzenRow AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Left">
+                <RadzenColumn>
+                    <RadzenLabel class="rz-color-white" Text="Name" />
+                </RadzenColumn>
+                <RadzenColumn>
+                    <RadzenTextBox @bind-Value="@EditMeal.Name" Style="width: 100%;" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow AlignItems="AlignItems.Center">
+                <RadzenColumn>
+                    <RadzenLabel class="rz-color-white" Text="Description" />
+                </RadzenColumn>
+                <RadzenColumn>
+                    <RadzenTextBox Style="width: 100%;" @bind-Value="@EditMeal.Description" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow AlignItems="AlignItems.Center">
+                <RadzenColumn>
+                    <RadzenLabel Text="Weight (g)" class="rz-color-white" />
+                </RadzenColumn>
+                <RadzenColumn>
+                    <RadzenNumeric Style="width: 100%;" @bind-Value="@EditMeal.Weight" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow AlignItems="AlignItems.Center">
+                <RadzenColumn>
+                    <RadzenLabel Text="Calories (kcal)" class="rz-color-white" />
+                </RadzenColumn>
+                <RadzenColumn>
+                    <RadzenNumeric Style="width: 100%;" @bind-Value="@EditMeal.Calories" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow AlignItems="AlignItems.Center">
+                <RadzenColumn>
+                    <RadzenLabel Text="Carbohydrates (g)" class="rz-color-white" />
+                </RadzenColumn>
+                <RadzenColumn>
+                    <RadzenNumeric Style="width: 100%;" @bind-Value="@EditMeal.Carbohydrates" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow AlignItems="AlignItems.Center">
+                <RadzenColumn>
+                    <RadzenLabel Text="Fat (g)" class="rz-color-white" />
+                </RadzenColumn>
+                <RadzenColumn>
+                    <RadzenNumeric Style="width: 100%;" @bind-Value="@EditMeal.Fat" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow AlignItems="AlignItems.Center">
+                <RadzenColumn>
+                    <RadzenLabel Text="Protein (g)" class="rz-color-white" />
+                </RadzenColumn>
+                <RadzenColumn>
+                    <RadzenNumeric Style="width: 100%;" @bind-Value="@EditMeal.Protein" />
+                </RadzenColumn>
+            </RadzenRow>
+        </RadzenStack>
+        <RadzenStack Orientation="Radzen.Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" Class="fixed-bottom m-3">
+            <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Cancel" class="rz-border-radius-0 rz-shadow-10 w-50" Click="@(() => ShowEdit = !ShowEdit)" />
+            <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" Icon="save" Text="Save" class="rz-border-radius-0 rz-shadow-10 w-50" />
+        </RadzenStack>
+    </RadzenTemplateForm>
+}
+
+
+@code {
+    private IEnumerable<Meal> Ingredients { get; set; }
+    private Meal EditMeal { get; set; }
+    private bool ShowEdit { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        Ingredients = await DianabolService.GetIngredientsAsync();
+    }
+
+    private void NewMeal(Meal meal)
+    {
+        EditMeal = meal;
+        ShowEdit = true;
+    }
+
+    private async void RemoveMeal(Meal meal)
+    {
+        try
+        {
+            await DianabolService.RemoveMeal(meal);
+        }
+        catch (Exception ex)
+        {
+            NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Deletion failed", Detail = ex.Message, Duration = 4000 });
+        }
+
+        Ingredients = await DianabolService.GetIngredientsAsync();
+    }
+
+    private async void SaveMeal(Meal meal)
+    {
+        DianabolService.MergeMeal(meal);
+        ShowEdit = false;
+        Ingredients = await DianabolService.GetIngredientsAsync();
+    }
+}
