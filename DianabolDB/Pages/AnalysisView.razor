@@ -1,38 +1,10 @@
 ﻿@page "/analysis"
 
-@using DianabolDB.Data
-@using DianabolDB.Service
+@using DataAccess.Models
+@using DataAccess.Service
+@using DataAccess.Interface
 @inject DianabolService DianabolService
 @inject NotificationService NotificationService
-
-
-<RadzenDataGrid AllowFiltering="true"
-                AllowColumnResize="true"
-                AllowAlternatingRows="false"
-                FilterMode="FilterMode.Advanced"
-                AllowSorting="true"
-                PageSize="20"
-                AllowPaging="false"
-                PagerHorizontalAlign="HorizontalAlign.Left"
-                ShowPagingSummary="true"
-                Data="@Days"
-                TItem="Day"
-                LogicalFilterOperator="LogicalFilterOperator.Or"
-                SelectionMode="DataGridSelectionMode.Single"
-                ExpandMode="DataGridExpandMode.Multiple">
-    <Template Context="data">
-        <RadzenCard class="m-0 p-2" Style="overflow:auto">
-            <span class="rz-color-white">@(Math.Round(data.Carbohydrates, 2) + " g carbohydrates")</span><br>
-            <span class="rz-color-white">@(Math.Round(data.Fat, 2) + " g fat")</span><br>
-            <span class="rz-color-white">@(Math.Round(data.Protein, 2) + " g protein")</span><br>
-        </RadzenCard>
-    </Template>
-    <Columns>
-        <RadzenDataGridColumn TItem="Day" Property="Date" Title="Date" Filterable="true" />
-        <RadzenDataGridColumn TItem="Day" Property="Calories" Title="kcal" Filterable="true" />
-        <RadzenDataGridColumn TItem="Day" Property="Weight" Title="weight" Filterable="true" />
-    </Columns>
-</RadzenDataGrid>
 
 
 <RadzenChart Style="color:white">
@@ -59,12 +31,39 @@
     <RadzenLineSeries Data="@Days" CategoryProperty="Date" LineType="LineType.Dashed" ValueProperty="Protein" Title="Protein"><RadzenMarkers MarkerType="MarkerType.Circle" /></RadzenLineSeries>
     <RadzenLineSeries Data="@Days" CategoryProperty="Date" LineType="LineType.Dashed" ValueProperty="Fat" Title="Fat"><RadzenMarkers MarkerType="MarkerType.Circle" /></RadzenLineSeries>
     <RadzenLineSeries Data="@Days" CategoryProperty="Date" LineType="LineType.Dashed" ValueProperty="Carbohydrates" Title="Carbohydrates"><RadzenMarkers MarkerType="MarkerType.Circle" /></RadzenLineSeries>
-    <RadzenValueAxis Min="0" Max="1000" Step="100">
+    <RadzenValueAxis Min="0" Max="300" Step="25">
         <RadzenGridLines Visible="true" />
     </RadzenValueAxis>
     <RadzenLegend Position="LegendPosition.Bottom" />
 </RadzenChart>
 
+<RadzenDataGrid AllowFiltering="true"
+                AllowColumnResize="true"
+                AllowAlternatingRows="false"
+                FilterMode="FilterMode.Advanced"
+                AllowSorting="true"
+                PageSize="10"
+                AllowPaging="false"
+                PagerHorizontalAlign="HorizontalAlign.Left"
+                ShowPagingSummary="true"
+                Data="@Days"
+                TItem="Day"
+                LogicalFilterOperator="LogicalFilterOperator.Or"
+                SelectionMode="DataGridSelectionMode.Single"
+                ExpandMode="DataGridExpandMode.Multiple">
+    <Template Context="data">
+        <RadzenCard class="m-0 p-2" Style="overflow:auto">
+            <span class="rz-color-white">@(Math.Round(data.Carbohydrates, 2) + " g carbohydrates")</span><br>
+            <span class="rz-color-white">@(Math.Round(data.Fat, 2) + " g fat")</span><br>
+            <span class="rz-color-white">@(Math.Round(data.Protein, 2) + " g protein")</span><br>
+        </RadzenCard>
+    </Template>
+    <Columns>
+        <RadzenDataGridColumn TItem="Day" Property="Date" Title="Date" Filterable="true" />
+        <RadzenDataGridColumn TItem="Day" Property="Calories" Title="kcal" Filterable="true" />
+        <RadzenDataGridColumn TItem="Day" Property="Weight" Title="weight" Filterable="true" />
+    </Columns>
+</RadzenDataGrid>
 
 
 @code {
@@ -74,7 +73,7 @@
     {
         await base.OnInitializedAsync();
 
-        Days = await DianabolService.GetDaysAsync();
+        Days = DianabolService.GetDays();
         Days.Where(d => d.Weight == null).ToList().ForEach(d => d.Weight = 0);
     }
 

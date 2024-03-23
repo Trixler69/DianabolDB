@@ -202,10 +202,6 @@ namespace DataAccess.Service
         {
             using (var connection = BuildConnection())
             {
-                connection.DropTable<Meal>();
-                connection.DropTable<MealRelation>();
-                connection.DropTable<Day>();
-                connection.DropTable<DayRelation>();
                 connection.CreateTable<Meal>();
                 connection.CreateTable<MealRelation>();
                 connection.CreateTable<Day>();

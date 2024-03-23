@@ -107,9 +107,11 @@ else
                 </RadzenRow>
             </RadzenStack>
             <br>
+
             <RadzenCard class="m-0 p-2 mb-2">
                 <span class="rz-color-white">@(" " + Math.Round(EditMeal.Calories, 2) + " kcal | " + Math.Round(EditMeal.Carbohydrates, 2) + "g carbs | " + Math.Round(EditMeal.Fat, 2) + "g fat | " + Math.Round(EditMeal.Protein, 2) + "g protein")</span>
             </RadzenCard>
+
             <RadzenDataGrid AllowFiltering="true"
                             AllowColumnResize="true"
                             AllowAlternatingRows="false"
@@ -119,40 +121,41 @@ else
                             AllowPaging="true"
                             PagerHorizontalAlign="HorizontalAlign.Left"
                             ShowPagingSummary="true"
-                            Data="@(EditMeal.SubMeals)"
-                            TItem="MealRelation"
+                            Data="@(Enumerable.Range(0, EditMeal.SubMeals.Count()))"
+                            TItem="int"
                             LogicalFilterOperator="LogicalFilterOperator.Or"
                             Style="max-height:45vh;overflow:auto"
                             ExpandMode="DataGridExpandMode.Multiple">
                 <Template Context="data">
                     <RadzenCard class="m-0 p-2">
-                        <span class="rz-color-secondary">@(data.SubMeal.Name)</span><br>
-                        <span class="rz-color-white">@(Math.Round(data.Carbohydrates, 2) + " g carbohydrates")</span><br>
-                        <span class="rz-color-white">@(Math.Round(data.Fat, 2) + " g fat")</span><br>
-                        <span class="rz-color-white">@(Math.Round(data.Protein, 2) + " g protein")</span><br>
+                        <span class="rz-color-secondary">@(EditMeal.SubMeals.ToArray().ElementAt(data).SubMeal.Name)</span><br>
+                        <span class="rz-color-white">@(Math.Round(EditMeal.SubMeals.ToArray().ElementAt(data).Carbohydrates, 2) + " g carbohydrates")</span><br>
+                        <span class="rz-color-white">@(Math.Round(EditMeal.SubMeals.ToArray().ElementAt(data).Fat, 2) + " g fat")</span><br>
+                        <span class="rz-color-white">@(Math.Round(EditMeal.SubMeals.ToArray().ElementAt(data).Protein, 2) + " g protein")</span><br>
                     </RadzenCard>
                 </Template>
                 <HeaderTemplate>
                     <span class="rz-color-secondary">Ingredients</span>
                 </HeaderTemplate>
                 <Columns>
-                    <RadzenDataGridColumn TItem="MealRelation" Property="Meal.Name" Title="Name">
+                    <RadzenDataGridColumn TItem="int" Title="Name">
                         <Template Context="data">
                             @(
-                        data.Amount + "g " + data.SubMeal.Name
-                        )
-
+                                EditMeal.SubMeals.ToArray().ElementAt(data).Amount + "g " + EditMeal.SubMeals.ToArray().ElementAt(data).SubMeal.Name
+                            )
                         </Template>
                     </RadzenDataGridColumn>
 
-                    <RadzenDataGridColumn TItem="MealRelation" Title="kcal" Width="85px">
+                    <RadzenDataGridColumn TItem="int" Title="kcal" Width="85px">
                         <Template Context="data">
-                            @(Math.Round(data.Calories, 2))
+                            @(
+                                Math.Round(EditMeal.SubMeals.ToArray().ElementAt(data).Calories, 2)
+                            )
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="MealRelation" Title="" Filterable="false" Width="50px" TextAlign="TextAlign.Center">
+                    <RadzenDataGridColumn TItem="int" Title="" Filterable="false" Width="50px" TextAlign="TextAlign.Center">
                         <Template Context="data">
-                            <RadzenButton Click=@(() => RemoveIngredient(data.Id)) Icon="delete" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Medium" class="rz-border-radius-0 m-0" />
+                            <RadzenButton Click=@(() => RemoveIngredient(data)) Icon="delete" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Medium" class="rz-border-radius-0 m-0" />
                         </Template>
                     </RadzenDataGridColumn>
                 </Columns>
@@ -162,7 +165,7 @@ else
 
             <RadzenStack Orientation="Radzen.Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" Class="fixed-bottom m-3">
                 <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Cancel" class="rz-border-radius-0 rz-shadow-10 w-50" Click="@(() => ShowEdit = !ShowEdit)" />
-                <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" Icon="save" Text="Save" class="rz-border-radius-0 rz-shadow-10 w-50" />
+                <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" Icon="save" Text="Save" class="rz-border-radius-0 rz-shadow-10 w-50" Disabled="@(!EditMeal.SubMeals.Any())" />
             </RadzenStack>
         </RadzenTemplateForm>
     }
@@ -252,15 +255,18 @@ else
         ShowEdit = true;
     }
 
-    private async void NewIngredient()
+    private void NewIngredient()
     {
         AllMeals = DianabolService.GetIngredients().ToList();
+
+        EditMeal.SubMeals = EditMeal.SubMeals.ToArray();
+
 
         SelectedMeals = new List<Meal>();
         ShowEditIngredients = true;
     }
 
-    private async void RemoveMeal(Meal meal)
+    private void RemoveMeal(Meal meal)
     {
         try
         {
@@ -274,12 +280,21 @@ else
         Recipes = DianabolService.GetRecipes();
     }
 
-    private void RemoveIngredient(int id)
+    private void RemoveIngredient(int index)
     {
-        EditMeal.SubMeals = EditMeal.SubMeals.Where(d => d.Id != id);
+        var subMeals = EditMeal.SubMeals.ToArray();
+        EditMeal.SubMeals = Enumerable.Empty<MealRelation>();
+
+        foreach (var i in Enumerable.Range(0, subMeals.Count()))
+        {
+            if(i != index)
+            {
+                EditMeal.SubMeals = EditMeal.SubMeals.Append(subMeals.ElementAt(i));
+            }
+        }
     }
 
-    private async void SaveMeal()
+    private void SaveMeal()
     {
         DianabolService.MergeMeal(EditMeal);
 
@@ -304,6 +319,7 @@ else
     {
         ShowEditIngredients = false;
         ShowEditWeight = false;
+
         Recipes = DianabolService.GetRecipes();
     }
 }

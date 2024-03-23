@@ -1,15 +1,15 @@
 ﻿@page "/products"
 
-@using DianabolDB.Data
 @using DianabolDB.Service
-@using DianabolDB.Interface
-@inject DianabolService DianabolService
+@using DataAccess.Models
+@using DataAccess.Service
+@using DataAccess.Interface
+@inject DataAccess.Service.DianabolService DianabolService
 @inject OpenFoodFactsService OpenFoodFactsService
 @inject NotificationService NotificationService
 
 @if (!ShowEdit)
 {
-
     <RadzenStack Gap="1rem" AlignItems="AlignItems.Stretch" Orientation="Radzen.Orientation.Vertical" JustifyContent="JustifyContent.SpaceBetween" class="h-100">
         <RadzenRow AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
             <RadzenColumn>
