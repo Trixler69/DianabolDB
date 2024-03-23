@@ -1,7 +1,8 @@
 ﻿@page "/ingredients"
 
-@using DianabolDB.Data
-@using DianabolDB.Service
+@using DataAccess.Models
+@using DataAccess.Service
+@using DataAccess.Interface
 @inject DianabolService DianabolService
 @inject NotificationService NotificationService
 
@@ -26,10 +27,10 @@
         <Template Context="data">
             <RadzenCard class="m-0 p-2" Style="overflow:auto">
                 <span class="rz-color-secondary">@(data.Name)</span><br>
-                <span class="rz-color-white">@(data.Calories + " kcal / " + data.Weight + "g")</span><br>
-                <span class="rz-color-white">@(data.Carbohydrates + " g carbohydrates / " + data.Weight + "g")</span><br>
-                <span class="rz-color-white">@(data.Fat + " g fat / " + data.Weight + "g")</span><br>
-                <span class="rz-color-white">@(data.Protein + " g protein / " + data.Weight + "g")</span><br>
+                <span class="rz-color-white">@(Math.Round(data.Calories, 2) + " kcal / " + data.Weight + "g")</span><br>
+                <span class="rz-color-white">@(Math.Round(data.Carbohydrates, 2) + " g carbohydrates / " + data.Weight + "g")</span><br>
+                <span class="rz-color-white">@(Math.Round(data.Fat, 2) + " g fat / " + data.Weight + "g")</span><br>
+                <span class="rz-color-white">@(Math.Round(data.Protein, 2) + " g protein / " + data.Weight + "g")</span><br>
             </RadzenCard>
         </Template>
         <Columns>
@@ -125,7 +126,7 @@ else
     {
         await base.OnInitializedAsync();
 
-        Ingredients = await DianabolService.GetIngredientsAsync();
+        Ingredients = DianabolService.GetIngredients();
     }
 
     private void NewMeal(Meal meal)
@@ -138,20 +139,21 @@ else
     {
         try
         {
-            await DianabolService.RemoveMeal(meal);
+            DianabolService.RemoveMeal(meal);
         }
         catch (Exception ex)
         {
             NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Deletion failed", Detail = ex.Message, Duration = 4000 });
         }
 
-        Ingredients = await DianabolService.GetIngredientsAsync();
+        Ingredients = DianabolService.GetIngredients();
     }
 
     private async void SaveMeal(Meal meal)
     {
         DianabolService.MergeMeal(meal);
+
         ShowEdit = false;
-        Ingredients = await DianabolService.GetIngredientsAsync();
+        Ingredients = DianabolService.GetIngredients();
     }
 }

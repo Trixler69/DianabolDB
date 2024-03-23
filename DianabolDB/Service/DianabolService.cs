@@ -27,7 +27,6 @@ namespace DianabolDB.Service
 
             //Meals.DeleteMany(x => true);
             //Days.DeleteMany(x => true);
-
             //InsertTestData();
         }
 

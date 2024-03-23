@@ -1,7 +1,8 @@
 ﻿@page "/"
 
-@using DianabolDB.Data
-@using DianabolDB.Service
+@using DataAccess.Models
+@using DataAccess.Service
+@using DataAccess.Interface
 @inject DianabolService DianabolService
 @inject DialogService DialogService
 
@@ -10,7 +11,7 @@
 {
     if (!ShowEditBodyWeight)
     {
-        <RadzenStack Gap="1rem" AlignItems="AlignItems.Stretch" Orientation="Radzen.Orientation.Vertical" JustifyContent="JustifyContent.SpaceBetween" class="h-100 pb-3">
+        <RadzenStack Gap="1rem" AlignItems="AlignItems.Stretch" Orientation="Radzen.Orientation.Vertical" JustifyContent="JustifyContent.SpaceBetween" class="h-100 pb-4">
             <RadzenRow AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
                 <RadzenColumn>
                     <div class="rz-text-align-left w-100">
@@ -24,65 +25,57 @@
                 </RadzenColumn>
             </RadzenRow>
         </RadzenStack>
-        <RadzenCard class="rz-background-color-secondary-light p-0 m-0 p-1 mb-2">
-            <RadzenRow AlignItems="AlignItems.Center" Orientation="Radzen.Orientation.Vertical" JustifyContent="JustifyContent.SpaceEvenly" Gap="0.2rem">
-                <RadzenCard class="m-0 px-2 py-1" Style="width:23%">
+
+        <RadzenCard class="rz-background-color-secondary-light p-0 m-0 p-1 mb-4">
+            <div style="display: flex; justify-content: space-between; gap: 0.3rem;">
+                <RadzenCard class="m-0 px-2 py-1" style="flex: 1;">
                     <RadzenText class="m-0 p-0" TextStyle="TextStyle.H6">@(Math.Round(SelectedDay.Calories))</RadzenText>
-                        <RadzenText class="m-0 p-0" TextStyle="TextStyle.Overline">@("kcal")</RadzenText>
-                    </RadzenCard>
-                    <RadzenCard class="m-0 px-2 py-1" Style="width:23%">
-                        <RadzenText class="m-0 p-0" TextStyle="TextStyle.H6">@(Math.Round(SelectedDay.Carbohydrates) + " g")</RadzenText>
-                        <RadzenText class="m-0 p-0" TextStyle="TextStyle.Overline">@("carbs")</RadzenText>
-                    </RadzenCard>
-                    <RadzenCard class="m-0 px-2 py-1" Style="width:23%">
-                        <RadzenText class="m-0 p-0" TextStyle="TextStyle.H6">@(Math.Round(SelectedDay.Fat) + " g")</RadzenText>
-                        <RadzenText class="m-0 p-0" TextStyle="TextStyle.Overline">@("fat")</RadzenText>
-                    </RadzenCard>
-                    <RadzenCard class="m-0 px-2 py-1" Style="width:23%">
-                        <RadzenText class="m-0 p-0" TextStyle="TextStyle.H6">@(Math.Round(SelectedDay.Protein) + " g")</RadzenText>
-                        <RadzenText class="m-0 p-0" TextStyle="TextStyle.Overline">@("protein")</RadzenText>
-                    </RadzenCard>
-                </RadzenRow>
-            </RadzenCard>
+                    <RadzenText class="m-0 p-0" TextStyle="TextStyle.Overline">@("kcal")</RadzenText>
+                </RadzenCard>
+                <RadzenCard class="m-0 px-2 py-1" style="flex: 1;">
+                    <RadzenText class="m-0 p-0" TextStyle="TextStyle.H6">@(Math.Round(SelectedDay.Carbohydrates) + " g")</RadzenText>
+                    <RadzenText class="m-0 p-0" TextStyle="TextStyle.Overline">@("carbs")</RadzenText>
+                </RadzenCard>
+                <RadzenCard class="m-0 px-2 py-1" style="flex: 1;">
+                    <RadzenText class="m-0 p-0" TextStyle="TextStyle.H6">@(Math.Round(SelectedDay.Fat) + " g")</RadzenText>
+                    <RadzenText class="m-0 p-0" TextStyle="TextStyle.Overline">@("fat")</RadzenText>
+                </RadzenCard>
+                <RadzenCard class="m-0 px-2 py-1" style="flex: 1;">
+                    <RadzenText class="m-0 p-0" TextStyle="TextStyle.H6">@(Math.Round(SelectedDay.Protein) + " g")</RadzenText>
+                    <RadzenText class="m-0 p-0" TextStyle="TextStyle.Overline">@("protein")</RadzenText>
+                </RadzenCard>
+            </div>
+        </RadzenCard>
+
         <RadzenDataGrid AllowFiltering="true"
-                AllowColumnResize="true"
-                AllowAlternatingRows="false"
-                FilterMode="FilterMode.Advanced"
-                AllowSorting="true" PageSize="8"
-                AllowPaging="false" PagerHorizontalAlign="HorizontalAlign.Left"
-                Data="@(SelectedDay == null ? new List<KeyValuePair<int,KeyValuePair<int, Meal>>>() : SelectedDay.MealObjects)"
-                TItem="KeyValuePair<int,KeyValuePair<int, Meal>>"
-                LogicalFilterOperator="LogicalFilterOperator.Or"
-                Style="max-height:70vh;overflow:auto"
-                ExpandMode="DataGridExpandMode.Multiple">
+                        AllowColumnResize="true"
+                        AllowAlternatingRows="false"
+                        FilterMode="FilterMode.Advanced"
+                        AllowSorting="true" PageSize="8"
+                        AllowPaging="false" PagerHorizontalAlign="HorizontalAlign.Left"
+                        Data="@(SelectedDay.Meals)"
+                        TItem="DayRelation"
+                        LogicalFilterOperator="LogicalFilterOperator.Or"
+                        Style="max-height:60vh;overflow:auto"
+                        ExpandMode="DataGridExpandMode.Multiple">
             <Template Context="data">
                 <RadzenCard class="m-0 p-2" Style="overflow:auto">
-                    <span class="rz-color-secondary">@(data.Value.Value.Name)</span><br>
-                    <span class="rz-color-white">@(Math.Round(data.Value.Value.Calories / data.Value.Value.Weight * data.Value.Key, 2) + " kcal")</span><br>
-                    <span class="rz-color-white">@(Math.Round(data.Value.Value.Carbohydrates / data.Value.Value.Weight * data.Value.Key, 2) + " g carbohydrates")</span><br>
-                    <span class="rz-color-white">@(Math.Round(data.Value.Value.Fat / data.Value.Value.Weight * data.Value.Key, 2) + " g fat")</span><br>
-                    <span class="rz-color-white">@(Math.Round(data.Value.Value.Protein / data.Value.Value.Weight * data.Value.Key, 2) + " g protein")</span><br>
+                    <span class="rz-color-secondary">@(data.Meal.Name)</span><br>
+                    <span class="rz-color-white">@(Math.Round(data.Calories, 2) + " kcal")</span><br>
+                    <span class="rz-color-white">@(Math.Round(data.Carbohydrates, 2) + " g carbohydrates")</span><br>
+                    <span class="rz-color-white">@(Math.Round(data.Fat, 2) + " g fat")</span><br>
+                    <span class="rz-color-white">@(Math.Round(data.Protein, 2) + " g protein")</span><br>
                 </RadzenCard>
             </Template>
-            @*        <HeaderTemplate>
-    <span class="rz-color-secondary">Meals</span>
-    </HeaderTemplate>*@
             <Columns>
-                <RadzenDataGridColumn TItem="KeyValuePair<int,KeyValuePair<int, Meal>>" Property="Value.Value.Name" Title="Name">
+                <RadzenDataGridColumn TItem="DayRelation" Property="Meal.Name" Title="Name">
                     <Template Context="data">
-                        @(data.Value.Key + "g " + data.Value.Value.Name)
-
+                        @(data.Amount + "g " + data.Meal.Name)
                     </Template>
                 </RadzenDataGridColumn>
-
-                @*<RadzenDataGridColumn TItem="KeyValuePair<int,KeyValuePair<int, Meal>>" Title="kcal" Width="85px">
-        <Template Context="data">
-        @(data.Value.Key * data.Value.Value.Calories / data.Value.Value.Weight)
-        </Template>
-        </RadzenDataGridColumn>*@
-                <RadzenDataGridColumn TItem="KeyValuePair<int,KeyValuePair<int, Meal>>" Title="" Filterable="false" Width="50px" TextAlign="TextAlign.Center">
-                    <Template>
-                        <RadzenButton Click=@(() => RemoveMeal(context.Key)) Icon="delete" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Small" class="rz-border-radius-0 m-0" />
+                <RadzenDataGridColumn TItem="DayRelation" Title="" Filterable="false" Width="50px" TextAlign="TextAlign.Center">
+                    <Template Context="data">
+                        <RadzenButton Click=@(() => RemoveMeal(data)) Icon="delete" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Small" class="rz-border-radius-0 m-0" />
                     </Template>
                 </RadzenDataGridColumn>
             </Columns>
@@ -105,11 +98,7 @@
 
             <RadzenStack Orientation="Radzen.Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" Class="fixed-bottom m-3">
                 <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Cancel" class="rz-border-radius-0 rz-shadow-10 w-50" Click="@(() => CancelEdit())" />
-                <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" Icon="done" Text="Next" class="rz-border-radius-0 rz-shadow-10 w-50" Click="@(async () => {
-                            await DianabolService.MergeDay(SelectedDay);
-                            OnDateChanged();
-                            ShowEditBodyWeight = false;
-                        })" />
+                <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" Icon="save" Text="Save" class="rz-border-radius-0 rz-shadow-10 w-50" Click="@(() => SaveBodyWeight())" />
             </RadzenStack>
         </RadzenStack>
     }
@@ -119,40 +108,40 @@ else if (ShowEdit)
     if (!ShowEditWeight)
     {
         <RadzenDataGrid AllowFiltering="true"
-                AllowColumnResize="true"
-                AllowAlternatingRows="false"
-                FilterMode="FilterMode.Advanced"
-                AllowSorting="true"
-                PageSize="10"
-                AllowPaging="false"
-                PagerHorizontalAlign="HorizontalAlign.Left"
-                ShowPagingSummary="true"
-                Data="@AllMeals"
-                TItem="KeyValuePair<int,KeyValuePair<int, Meal>>"
-                LogicalFilterOperator="LogicalFilterOperator.Or"
-                SelectionMode="DataGridSelectionMode.Single"
-                @bind-Value="SelectedMeals"
-                Style="max-height:70vh;overflow:auto"
-                ExpandMode="DataGridExpandMode.Multiple">
+                        AllowColumnResize="true"
+                        AllowAlternatingRows="false"
+                        FilterMode="FilterMode.Advanced"
+                        AllowSorting="true"
+                        PageSize="10"
+                        AllowPaging="false"
+                        PagerHorizontalAlign="HorizontalAlign.Left"
+                        ShowPagingSummary="true"
+                        Data="@AllMeals"
+                        TItem="Meal"
+                        LogicalFilterOperator="LogicalFilterOperator.Or"
+                        SelectionMode="DataGridSelectionMode.Single"
+                        @bind-Value="SelectedMeals"
+                        Style="max-height:70vh;overflow:auto"
+                        ExpandMode="DataGridExpandMode.Multiple">
             <Template Context="data">
                 <RadzenCard class="m-0 p-2" Style="overflow:auto">
-                    <span class="rz-color-secondary">@(data.Value.Value.Name)</span><br>
-                    <span class="rz-color-white">@(data.Value.Value.Calories + " kcal / " + data.Value.Value.Weight + "g")</span><br>
-                    <span class="rz-color-white">@(data.Value.Value.Carbohydrates + " g carbohydrates / " + data.Value.Value.Weight + "g")</span><br>
-                    <span class="rz-color-white">@(data.Value.Value.Fat + " g fat / " + data.Value.Value.Weight + "g")</span><br>
-                    <span class="rz-color-white">@(data.Value.Value.Protein + " g protein / " + data.Value.Value.Weight + "g")</span><br>
+                    <span class="rz-color-secondary">@(data.Name)</span><br>
+                    <span class="rz-color-white">@(Math.Round(data.Calories, 2) + " kcal / " + data.Weight + "g")</span><br>
+                    <span class="rz-color-white">@(Math.Round(data.Carbohydrates, 2) + " g carbohydrates / " + data.Weight + "g")</span><br>
+                    <span class="rz-color-white">@(Math.Round(data.Fat, 2) + " g fat / " + data.Weight + "g")</span><br>
+                    <span class="rz-color-white">@(Math.Round(data.Protein, 2) + " g protein / " + data.Weight + "g")</span><br>
                 </RadzenCard>
             </Template>
             <Columns>
-                <RadzenDataGridColumn TItem="KeyValuePair<int,KeyValuePair<int, Meal>>" Property="Value.Value.Name" Title="Name" Filterable="true" />
-                <RadzenDataGridColumn TItem="KeyValuePair<int,KeyValuePair<int, Meal>>" Property="Value.Value.Calories" Title="kcal" Filterable="true" Width="85px" />
+                <RadzenDataGridColumn TItem="Meal" Property="Name" Title="Name" Filterable="true" />
+                <RadzenDataGridColumn TItem="Meal" Property="Calories" Title="kcal" Filterable="true" Width="85px" />
             </Columns>
         </RadzenDataGrid>
 
 
         <RadzenStack Orientation="Radzen.Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" Class="fixed-bottom m-3">
             <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Cancel" class="rz-border-radius-0 rz-shadow-10 w-50" Click="@(() => CancelEdit())" />
-            <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" Icon="done" Text="Next" class="rz-border-radius-0 rz-shadow-10 w-50" Click="@(() => { ShowEditWeight = !ShowEditWeight; EditWeight = SelectedMeals.FirstOrDefault().Value.Key; })" Disabled="@(SelectedMeals.Count == 0)" />
+            <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" Icon="done" Text="Next" class="rz-border-radius-0 rz-shadow-10 w-50" Click="@(() => { ShowEditWeight = !ShowEditWeight; EditWeight = (int)SelectedMeals.FirstOrDefault().Weight; })" Disabled="@(SelectedMeals.Count == 0)" />
         </RadzenStack>
     }
     else
@@ -176,16 +165,19 @@ else if (ShowEdit)
 
 @code {
     private DateTime? SelectedDate { get; set; } = DateTime.Today;
-    private IEnumerable<Day> Days { get; set; }
-    private Day SelectedDay { get; set; }
-    private Day EditDay { get; set; }
+    private IEnumerable<Day> Days { get; set; } = default!;
+
+    private Day? SelectedDay { get; set; }
+    private Day EditDay { get; set; } = default!;
+
     private bool ShowEdit { get; set; }
     private bool ShowEditWeight { get; set; }
     private bool ShowEditBodyWeight { get; set; }
+
     private int EditWeight { get; set; }
-    private IList<KeyValuePair<int, KeyValuePair<int, Meal>>> AllMeals { get; set; }
-    private IList<KeyValuePair<int, KeyValuePair<int, Meal>>> SelectedMeals { get; set; }
-    private Random Random = new();
+
+    private IList<Meal> AllMeals { get; set; } = default!;
+    private IList<Meal> SelectedMeals { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -196,53 +188,66 @@ else if (ShowEdit)
 
     private async void OnDateChanged()
     {
-        Days = await DianabolService.GetDaysAsync();
+        Days = DianabolService.GetDays();
 
-        if (Days.Count() != 0)
+        if (Days.Any())
         {
-            SelectedDay = Days.FirstOrDefault(x => x.Date.Date == SelectedDate.Value.Date);
+            SelectedDay = Days.FirstOrDefault(d => d.Date == SelectedDate.Value.Date);
         }
 
         SelectedDay = SelectedDay == null ? new Day() { Date = (DateTime)SelectedDate } : SelectedDay;
 
-        if (Days.Count() != 0)
+        if (Days.Any())
         {
-            SelectedDay.Weight = SelectedDay.Weight == null ? (Days.FirstOrDefault(x => x.Id == Days.Max(d => d.Id)).Weight) : SelectedDay.Weight;
-        }
+            var lastWeight = (Days.FirstOrDefault(x => x.Id == Days.Max(d => d.Id))).Weight;
 
+            SelectedDay.Weight = SelectedDay.Weight == null ? lastWeight : SelectedDay.Weight;
+        }
     }
 
     private async Task NewMeal()
     {
-        AllMeals = (await DianabolService.GetMealsAsync()).Select(m => new KeyValuePair<int, KeyValuePair<int, Meal>>(Random.Next(), new KeyValuePair<int, Meal>(m.Weight, m))).ToList();
-        EditDay = SelectedDay == null ? new Day() { Date = (DateTime)SelectedDate } : SelectedDay;
-        SelectedMeals = new List<KeyValuePair<int, KeyValuePair<int, Meal>>>();
+        AllMeals = DianabolService.GetMeals().ToList();
+
+        SelectedMeals = new List<Meal>();
+
         ShowEdit = true;
     }
 
-    private async Task RemoveMeal(int id)
+    private async Task RemoveMeal(DayRelation dayRelation)
     {
-        SelectedDay.Meals = SelectedDay.Meals.Where(d => d.Key != id);
+        DianabolService.RemoveDayRelation(dayRelation);
 
-        await DianabolService.MergeDay(SelectedDay);
-
-        Days = await DianabolService.GetDaysAsync();
-        SelectedDay = Days.FirstOrDefault(x => x.Date.Date == SelectedDate.Value.Date);
+        OnDateChanged();
     }
 
     private async Task SaveDay()
     {
-        EditDay.Meals = EditDay.Meals.Append(new KeyValuePair<int, KeyValuePair<int, int>>(Random.Next(), new KeyValuePair<int, int>(EditWeight, (int)SelectedMeals.FirstOrDefault().Value.Value.Id)));
+        DianabolService.MergeDay(SelectedDay);
 
-        await DianabolService.MergeDay(EditDay);
+        DianabolService.MergeDayRelation(new DayRelation()
+            {
+                MealId = (int)SelectedMeals.FirstOrDefault().Id,
+                Amount = EditWeight,
+                DayId = SelectedDay.Id,
+                Meal = SelectedMeals.FirstOrDefault()
+            });
 
         ShowEdit = false;
         ShowEditWeight = false;
-        Days = await DianabolService.GetDaysAsync();
-        SelectedDay = Days.FirstOrDefault(x => x.Date.Date == SelectedDate.Value.Date);
+
+        OnDateChanged();
     }
 
-    private void CancelEdit()
+    private async Task SaveBodyWeight()
+    {
+        DianabolService.MergeDay(SelectedDay);
+        OnDateChanged();
+
+        ShowEditBodyWeight = false;
+    }
+
+    private async Task CancelEdit()
     {
         ShowEdit = false;
         ShowEditWeight = false;

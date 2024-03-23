@@ -51,6 +51,9 @@
     <PackageReference Include="JsonFlatFileDataStore" Version="2.4.2" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-    <PackageReference Include="Radzen.Blazor" Version="4.17.1" />
+    <PackageReference Include="Radzen.Blazor" Version="4.23.4" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
   </ItemGroup>
 </Project>

@@ -28,8 +28,10 @@ public static class MauiProgram
         builder.Services.AddScoped<TooltipService>();
         builder.Services.AddScoped<ContextMenuService>();
         
-        builder.Services.AddSingleton<DianabolService>();
+        //builder.Services.AddSingleton<DianabolService>();
         builder.Services.AddSingleton<OpenFoodFactsService>();
+
+        builder.Services.AddSingleton<DataAccess.Service.DianabolService>(new DataAccess.Service.DianabolService(FileSystem.AppDataDirectory));
 
         return builder.Build();
 	}
