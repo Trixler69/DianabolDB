@@ -1,9 +1,6 @@
 ﻿@page "/analysis"
 
-@using DataAccess.Models
-@using DataAccess.Service
-@using DataAccess.Interface
-@inject DianabolService DianabolService
+@inject IDianabolService DianabolService
 @inject NotificationService NotificationService
 
 
@@ -18,7 +15,7 @@
 </RadzenChart>
 
 <RadzenChart Style="color:white">
-    <RadzenLineSeries Data="@Days" CategoryProperty="Date" LineType="LineType.Dashed" ValueProperty="Weight" Title="Weight">
+    <RadzenLineSeries Data="@Days" CategoryProperty="Date" LineType="LineType.Dashed" ValueProperty="BodyWeight" Title="Weight">
         <RadzenMarkers MarkerType="MarkerType.Circle" />
     </RadzenLineSeries>
     <RadzenValueAxis Min="50" Max="100" Step="5">
@@ -61,7 +58,7 @@
     <Columns>
         <RadzenDataGridColumn TItem="Day" Property="Date" Title="Date" Filterable="true" />
         <RadzenDataGridColumn TItem="Day" Property="Calories" Title="kcal" Filterable="true" />
-        <RadzenDataGridColumn TItem="Day" Property="Weight" Title="weight" Filterable="true" />
+        <RadzenDataGridColumn TItem="Day" Property="BodyWeight" Title="weight" Filterable="true" />
     </Columns>
 </RadzenDataGrid>
 
@@ -74,7 +71,7 @@
         await base.OnInitializedAsync();
 
         Days = DianabolService.GetDays();
-        Days.Where(d => d.Weight == null).ToList().ForEach(d => d.Weight = 0);
+        Days.Where(d => d.BodyWeight == null).ToList().ForEach(d => d.BodyWeight = 0);
     }
 
 }

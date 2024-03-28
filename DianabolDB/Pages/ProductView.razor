@@ -1,11 +1,8 @@
 ﻿@page "/products"
 
-@using DianabolDB.Service
-@using DataAccess.Models
-@using DataAccess.Service
-@using DataAccess.Interface
-@inject DataAccess.Service.DianabolService DianabolService
-@inject OpenFoodFactsService OpenFoodFactsService
+
+@inject IDianabolService DianabolService
+@inject IOpenFoodFactsService OpenFoodFactsService
 @inject NotificationService NotificationService
 
 @if (!ShowEdit)
@@ -161,10 +158,11 @@ else
 
     private async Task SearchProduct()
     {
+
         try
         {
             ShowLoading = true;
-            Ingredients = (await OpenFoodFactsService.FetchProductByName(SearchString)).Products.Select(p => new Meal()
+            Ingredients = (await OpenFoodFactsService.FetchProductByName(SearchString))?.Products.Select(p => new Meal()
                 {
                     Name = p.Brands + " " + p.ProductName,
                     Calories = p.Nutriments.EnergyKcal100g == null ? 0 : (Double)p.Nutriments.EnergyKcal100g,

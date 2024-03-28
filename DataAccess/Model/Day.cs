@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SQLite;
 
-namespace DataAccess.Models
+namespace DataAccess.Model
 {
     public class Day
     {
@@ -14,7 +14,7 @@ namespace DataAccess.Models
         public DateTime Date { get; set; }
         [Ignore]
         public IEnumerable<DayRelation> Meals { get; set; } = Enumerable.Empty<DayRelation>();
-        public double? Weight { get; set; }
+        public double? BodyWeight { get; set; }
         [Ignore]
         public double Calories
         {
@@ -67,14 +67,16 @@ namespace DataAccess.Models
         public int MealId { get; set; }
         [Ignore]
         public Meal Meal { get; set; } = default!;
-        public double Amount { get; set; }
+        public double RelAmount { get; set; }
         [Ignore]
-        public double Calories => (Meal.Calories / Meal.Weight) * Amount;
+        public double Amount => RelAmount * Meal.Weight;
         [Ignore]
-        public double Protein => (Meal.Protein / Meal.Weight) * Amount;
+        public double Calories => Meal.Calories * RelAmount;
         [Ignore]
-        public double Carbohydrates => (Meal.Carbohydrates / Meal.Weight) * Amount;
+        public double Protein => Meal.Protein * RelAmount;
         [Ignore]
-        public double Fat => (Meal.Fat / Meal.Weight) * Amount;
+        public double Carbohydrates => Meal.Carbohydrates * RelAmount;
+        [Ignore]
+        public double Fat => Meal.Fat * RelAmount;
     }
 }

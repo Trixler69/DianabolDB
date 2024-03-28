@@ -5,17 +5,17 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace OpenFoodFacts.DotNet.Wrapper.Models
+namespace DataAccess.Model
 {
     public class Product
     {
         [JsonPropertyName("_id")]
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
         [JsonPropertyName("product_name")]
-        public string ProductName { get; set; }
+        public string ProductName { get; set; } = string.Empty;
         [JsonPropertyName("nutriments")]
-        public Nutriments Nutriments { get; set; }
+        public Nutriments? Nutriments { get; set; }
         [JsonPropertyName("brands")]
-        public string Brands { get; set; }
+        public string Brands { get; set; } = string.Empty;
     }
 }

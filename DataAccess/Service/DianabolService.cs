@@ -1,5 +1,5 @@
 ﻿using DataAccess.Interface;
-using DataAccess.Models;
+using DataAccess.Model;
 using System;
 using System.Collections.Generic;
 using SQLite;
@@ -32,24 +32,26 @@ namespace DataAccess.Service
             {
                 var meals = connection.Query<Meal>(sql);
 
-                meals.ForEach(meal => meal.SubMeals = GetMealRelations((int)meal.Id));
+                meals.ForEach(meal => meal.SubMeals = GetMealRelations(meal.Id));
 
                 return meals;
             }
         }
 
-        public Meal? GetMeal(int mealId)
+        private Meal GetMeal(int mealId)
         {
             string sql = $@"SELECT * FROM {nameof(Meal)} where {nameof(Meal.Id)} == ?";
 
             using (var connection = BuildConnection())
             {
-                return connection.Query<Meal>(sql, mealId).FirstOrDefault();
+                return connection.Query<Meal>(sql, mealId).FirstOrDefault() ?? new Meal();
             }
         }
 
-        public IEnumerable<MealRelation> GetMealRelations(int mealId)
+        private IEnumerable<MealRelation> GetMealRelations(int? mealId)
         {
+            if (mealId == null) { return Enumerable.Empty<MealRelation>(); }
+
             string sql = $@"SELECT * FROM {nameof(MealRelation)} where {nameof(MealRelation.MealId)} == ?";
 
             using (var connection = BuildConnection())
@@ -58,18 +60,22 @@ namespace DataAccess.Service
 
                 mealRels.ForEach(relation =>
                 {
-                    var meal = GetMeal(relation.SubMealId);
-                    if (meal == null)
-                    {
-                        throw new ArgumentNullException();
-                    }
-                    else
-                    {
-                        relation.SubMeal = meal;
-                    }
+                    relation.SubMeal = GetMeal(relation.SubMealId);
                 });
 
                 return mealRels;
+            }
+        }
+
+        private IEnumerable<MealRelation> GetMealRelationsBySubMealId(int? mealId)
+        {
+            if (mealId == null) { return Enumerable.Empty<MealRelation>(); }
+
+            string sql = $@"SELECT * FROM {nameof(MealRelation)} where {nameof(MealRelation.SubMealId)} == ?";
+
+            using (var connection = BuildConnection())
+            {
+                return connection.Query<MealRelation>(sql, mealId);
             }
         }
 
@@ -83,15 +89,14 @@ namespace DataAccess.Service
 
                 days.ForEach(day =>
                 {
-                    var relations = GetDayRelations(day.Id);
-                    day.Meals = relations ?? Enumerable.Empty<DayRelation>();
+                    day.Meals = GetDayRelations(day.Id);
                 });
 
                 return days;
             }
         }
 
-        public IEnumerable<DayRelation>? GetDayRelations(int dayId)
+        private IEnumerable<DayRelation> GetDayRelations(int dayId)
         {
             string sql = $@"SELECT * FROM {nameof(DayRelation)} where {nameof(DayRelation.DayId)} == ?";
 
@@ -101,24 +106,27 @@ namespace DataAccess.Service
 
                 dayRels.ForEach(relation =>
                 {
-                    var meal = GetMeal(relation.MealId);
-                    if (meal == null)
-                    {
-                        throw new ArgumentNullException();
-                    }
-                    else
-                    {
-                        relation.Meal = meal;
-                    }
+                    relation.Meal = GetMeal(relation.MealId);
                 });
 
                 return dayRels;
             }
         }
 
+        private IEnumerable<DayRelation> GetDayRelationsByMealId(int? mealId)
+        {
+            if (mealId == null) { return Enumerable.Empty<DayRelation>(); }
+
+            string sql = $@"SELECT * FROM {nameof(DayRelation)} where {nameof(DayRelation.MealId)} == ?";
+
+            using (var connection = BuildConnection())
+            {
+                return connection.Query<DayRelation>(sql, mealId);
+            }
+        }
+
         public IEnumerable<Meal> GetIngredients()
         {
-            var x = GetMeals();
             return GetMeals().Where(m => !m.SubMeals.Any());
         }
 
@@ -131,7 +139,15 @@ namespace DataAccess.Service
         {
             using (var connection = BuildConnection())
             {
-                connection.Delete(meal);
+                if (GetMealRelationsBySubMealId(meal.Id).Any() || GetDayRelationsByMealId(meal.Id).Any())
+                {
+                    throw new InvalidOperationException("Delete Parent Meal or Day");
+                }
+                else
+                {
+                    connection.Delete(meal);
+                    meal.SubMeals.ToList().ForEach(m => connection.Delete(m));
+                }
             }
         }
 
@@ -160,13 +176,12 @@ namespace DataAccess.Service
                             }
                         });
 
-
                     meal.SubMeals.ToList().ForEach(m => connection.InsertOrReplace(m));
                 }
             }
         }
 
-        public void MergeMealRelation(MealRelation relation)
+        private void MergeMealRelation(MealRelation relation)
         {
             using (var connection = BuildConnection())
             {
@@ -202,6 +217,11 @@ namespace DataAccess.Service
         {
             using (var connection = BuildConnection())
             {
+                connection.DropTable<Meal>();
+                connection.DropTable<Day>();
+                connection.DropTable<MealRelation>();
+                connection.DropTable<DayRelation>();
+
                 connection.CreateTable<Meal>();
                 connection.CreateTable<MealRelation>();
                 connection.CreateTable<Day>();

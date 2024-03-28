@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using Radzen;
-using DianabolDB.Service;
-using DianabolDB.Interface;
+using DataAccess.Service;
+using DataAccess.Interface;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DianabolDB;
 
@@ -28,10 +29,9 @@ public static class MauiProgram
         builder.Services.AddScoped<TooltipService>();
         builder.Services.AddScoped<ContextMenuService>();
         
-        //builder.Services.AddSingleton<DianabolService>();
-        builder.Services.AddSingleton<OpenFoodFactsService>();
+        builder.Services.AddSingleton<IOpenFoodFactsService,OpenFoodFactsService>();
 
-        builder.Services.AddSingleton<DataAccess.Service.DianabolService>(new DataAccess.Service.DianabolService(FileSystem.AppDataDirectory));
+        builder.Services.AddSingleton<IDianabolService>(new DianabolService(FileSystem.AppDataDirectory));
 
         return builder.Build();
 	}

@@ -1,9 +1,6 @@
 ﻿@page "/recipes"
 
-@using DataAccess.Models
-@using DataAccess.Service
-@using DataAccess.Interface
-@inject DianabolService DianabolService
+@inject IDianabolService DianabolService
 @inject NotificationService NotificationService
 
 @if (!ShowEdit)
@@ -23,9 +20,9 @@
         <Template Context="DetailMeal">
             <RadzenCard class="m-0 p-2 mb-2">
                 <span class="rz-color-secondary">@(Math.Round(DetailMeal.Calories, 2) + " kcal")</span><br>
-                <span class="rz-color-white">@(Math.Round(DetailMeal.Carbohydrates, 2) + " g carbohydrates")</span><br>
-                <span class="rz-color-white">@(Math.Round(DetailMeal.Fat, 2) + " g fat")</span><br>
-                <span class="rz-color-white">@(Math.Round(DetailMeal.Protein, 2) + " g protein")</span>
+                <span class="rz-color-white">@(Math.Round(DetailMeal.Carbohydrates, 2) + "g carbohydrates")</span><br>
+                <span class="rz-color-white">@(Math.Round(DetailMeal.Fat, 2) + "g fat")</span><br>
+                <span class="rz-color-white">@(Math.Round(DetailMeal.Protein, 2) + "g protein")</span>
             </RadzenCard>
             <RadzenDataGrid AllowFiltering="true"
                             AllowColumnResize="true"
@@ -43,9 +40,9 @@
                 <Template Context="data">
                     <RadzenCard class="m-0 p-2">
                         <span class="rz-color-secondary">@(data.SubMeal.Name)</span><br>
-                        <span class="rz-color-white">@(Math.Round(data.Carbohydrates, 2) + " g carbohydrates")</span><br>
-                        <span class="rz-color-white">@(Math.Round(data.Fat, 2) + " g fat")</span><br>
-                        <span class="rz-color-white">@(Math.Round(data.Protein, 2) + " g protein")</span><br>
+                        <span class="rz-color-white">@(Math.Round(data.Carbohydrates, 2) + "g carbohydrates")</span><br>
+                        <span class="rz-color-white">@(Math.Round(data.Fat, 2) + "g fat")</span><br>
+                        <span class="rz-color-white">@(Math.Round(data.Protein, 2) + "g protein")</span><br>
                     </RadzenCard>
                 </Template>
                 <HeaderTemplate>
@@ -127,29 +124,37 @@ else
                             Style="max-height:45vh;overflow:auto"
                             ExpandMode="DataGridExpandMode.Multiple">
                 <Template Context="data">
+                    @{
+                        var mealRel = EditMeal.SubMeals.ToArray().ElementAt(data);
+                    }
                     <RadzenCard class="m-0 p-2">
-                        <span class="rz-color-secondary">@(EditMeal.SubMeals.ToArray().ElementAt(data).SubMeal.Name)</span><br>
-                        <span class="rz-color-white">@(Math.Round(EditMeal.SubMeals.ToArray().ElementAt(data).Carbohydrates, 2) + " g carbohydrates")</span><br>
-                        <span class="rz-color-white">@(Math.Round(EditMeal.SubMeals.ToArray().ElementAt(data).Fat, 2) + " g fat")</span><br>
-                        <span class="rz-color-white">@(Math.Round(EditMeal.SubMeals.ToArray().ElementAt(data).Protein, 2) + " g protein")</span><br>
+                        <span class="rz-color-secondary">@(mealRel.SubMeal.Name)</span><br>
+                        <span class="rz-color-white">@(Math.Round(mealRel.Carbohydrates, 2) + "g carbohydrates")</span><br>
+                        <span class="rz-color-white">@(Math.Round(mealRel.Fat, 2) + "g fat")</span><br>
+                        <span class="rz-color-white">@(Math.Round(mealRel.Protein, 2) + "g protein")</span><br>
                     </RadzenCard>
                 </Template>
                 <HeaderTemplate>
                     <span class="rz-color-secondary">Ingredients</span>
                 </HeaderTemplate>
                 <Columns>
+                    
                     <RadzenDataGridColumn TItem="int" Title="Name">
                         <Template Context="data">
-                            @(
-                                EditMeal.SubMeals.ToArray().ElementAt(data).Amount + "g " + EditMeal.SubMeals.ToArray().ElementAt(data).SubMeal.Name
-                            )
+                            @{
+                                var mealRel = EditMeal.SubMeals.ToArray().ElementAt(data);
+                            }
+                            @(mealRel.Amount + "g " + mealRel.SubMeal.Name)
                         </Template>
                     </RadzenDataGridColumn>
 
                     <RadzenDataGridColumn TItem="int" Title="kcal" Width="85px">
                         <Template Context="data">
+                            @{
+                                var mealRel = EditMeal.SubMeals.ToArray().ElementAt(data);
+                            }
                             @(
-                                Math.Round(EditMeal.SubMeals.ToArray().ElementAt(data).Calories, 2)
+                                Math.Round(mealRel.Calories, 2)
                             )
                         </Template>
                     </RadzenDataGridColumn>
@@ -193,9 +198,9 @@ else
                     <RadzenCard class="m-0 p-2" Style="overflow:auto">
                         <span class="rz-color-secondary">@(data.Name)</span><br>
                         <span class="rz-color-white">@(Math.Round(data.Calories, 2) + " kcal")</span><br>
-                        <span class="rz-color-white">@(Math.Round(data.Carbohydrates, 2) + " g carbohydrates")</span><br>
-                        <span class="rz-color-white">@(Math.Round(data.Fat, 2) + " g fat")</span><br>
-                        <span class="rz-color-white">@(Math.Round(data.Protein, 2) + " g protein")</span><br>
+                        <span class="rz-color-white">@(Math.Round(data.Carbohydrates, 2) + "g carbohydrates")</span><br>
+                        <span class="rz-color-white">@(Math.Round(data.Fat, 2) + "g fat")</span><br>
+                        <span class="rz-color-white">@(Math.Round(data.Protein, 2) + "g protein")</span><br>
                     </RadzenCard>
                 </Template>
                 <Columns>
@@ -230,7 +235,7 @@ else
 }
 
 @code {
-    private IEnumerable<Meal> Recipes { get; set; }
+    private IEnumerable<Meal> Recipes { get; set; } = Enumerable.Empty<Meal>();
 
     private Meal EditMeal { get; set; }
     private int EditWeight { get; set; }
@@ -239,8 +244,8 @@ else
     private bool ShowEditIngredients { get; set; }
     private bool ShowEditWeight { get; set; }
 
-    private IList<Meal> AllMeals { get; set; }
-    private IList<Meal> SelectedMeals { get; set; }
+    private IList<Meal> AllMeals { get; set; } = new List<Meal>();
+    private IList<Meal> SelectedMeals { get; set; } = new List<Meal>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -304,11 +309,13 @@ else
 
     private void SaveIngredient()
     {
+        var subMeal = SelectedMeals.FirstOrDefault() ?? new Meal();
+
         EditMeal.SubMeals = EditMeal.SubMeals.Append(new MealRelation()
             {
-                SubMealId = (int)SelectedMeals.FirstOrDefault().Id,
-                Amount = EditWeight,
-                SubMeal = SelectedMeals.FirstOrDefault()
+                SubMealId = (int)subMeal.Id,
+                RelAmount = EditWeight/subMeal.Weight,
+                SubMeal = subMeal
             });
 
         ShowEditIngredients = false;

@@ -1,9 +1,6 @@
 ﻿@page "/ingredients"
 
-@using DataAccess.Models
-@using DataAccess.Service
-@using DataAccess.Interface
-@inject DianabolService DianabolService
+@inject IDianabolService DianabolService
 @inject NotificationService NotificationService
 
 @if (!ShowEdit)
@@ -73,7 +70,7 @@ else
                     <RadzenLabel Text="Weight (g)" class="rz-color-white" />
                 </RadzenColumn>
                 <RadzenColumn>
-                    <RadzenNumeric Style="width: 100%;" @bind-Value="@EditMeal.Weight" />
+                    <RadzenNumeric TValue="double" Style="width: 100%;" Value="@EditMeal.Weight" ValueChanged="@((double weight) => OnWeightChange(weight))"/>
                 </RadzenColumn>
             </RadzenRow>
             <RadzenRow AlignItems="AlignItems.Center">
@@ -135,7 +132,7 @@ else
         ShowEdit = true;
     }
 
-    private async void RemoveMeal(Meal meal)
+    private void RemoveMeal(Meal meal)
     {
         try
         {
@@ -149,11 +146,21 @@ else
         Ingredients = DianabolService.GetIngredients();
     }
 
-    private async void SaveMeal(Meal meal)
+    private void SaveMeal(Meal meal)
     {
         DianabolService.MergeMeal(meal);
 
         ShowEdit = false;
         Ingredients = DianabolService.GetIngredients();
+    }
+
+    private void OnWeightChange(double weight)
+    {
+        var factor = weight / EditMeal.Weight;
+        EditMeal.Weight = weight;
+        EditMeal.Calories = EditMeal.Calories * factor;
+        EditMeal.Protein = EditMeal.Protein * factor;
+        EditMeal.Carbohydrates = EditMeal.Carbohydrates * factor;
+        EditMeal.Fat = EditMeal.Fat * factor;
     }
 }

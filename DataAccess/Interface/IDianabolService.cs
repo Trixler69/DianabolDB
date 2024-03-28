@@ -1,4 +1,4 @@
-﻿using DataAccess.Models;
+﻿using DataAccess.Model;
 
 namespace DataAccess.Interface
 {
@@ -11,5 +11,7 @@ namespace DataAccess.Interface
         void MergeDay(Day day);
         void MergeMeal(Meal meal);
         void RemoveMeal(Meal meal);
+        void MergeDayRelation(DayRelation relation);
+        void RemoveDayRelation(DayRelation relation);
     }
 }

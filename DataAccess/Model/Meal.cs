@@ -1,11 +1,12 @@
 ﻿using SQLite;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccess.Models
+namespace DataAccess.Model
 {
     public class Meal
     {
@@ -80,7 +81,7 @@ namespace DataAccess.Models
             {
                 if (!SubMeals.Any()) { return weight; }
                 double sum = 0;
-                SubMeals.ToList().ForEach(m => sum += m.Amount);
+                SubMeals.ToList().ForEach(m => sum += m.RelAmount * m.SubMeal.Weight);
                 return sum;
             }
             set
@@ -100,14 +101,16 @@ namespace DataAccess.Models
         public int SubMealId { get; set; }
         [Ignore]
         public Meal SubMeal { get; set; } = default!;
-        public double Amount { get; set; }
+        public double RelAmount { get; set; }
         [Ignore]
-        public double Calories => (SubMeal.Calories / SubMeal.Weight) * Amount;
+        public double Amount => RelAmount*SubMeal.Weight;
         [Ignore]
-        public double Protein => (SubMeal.Protein / SubMeal.Weight) * Amount;
+        public double Calories => SubMeal.Calories  * RelAmount;
         [Ignore]
-        public double Carbohydrates => (SubMeal.Carbohydrates / SubMeal.Weight) * Amount;
+        public double Protein => SubMeal.Protein * RelAmount;
         [Ignore]
-        public double Fat => (SubMeal.Fat / SubMeal.Weight) * Amount;
+        public double Carbohydrates => SubMeal.Carbohydrates * RelAmount;
+        [Ignore]
+        public double Fat => SubMeal.Fat * RelAmount;
     }
 }

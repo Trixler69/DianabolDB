@@ -1,9 +1,6 @@
 ﻿@page "/"
 
-@using DataAccess.Models
-@using DataAccess.Service
-@using DataAccess.Interface
-@inject DianabolService DianabolService
+@inject IDianabolService DianabolService
 @inject DialogService DialogService
 
 
@@ -15,32 +12,32 @@
             <RadzenRow AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
                 <RadzenColumn>
                     <div class="rz-text-align-left w-100">
-                        <RadzenDatePicker Style="width:100%" DateFormat="dd/MM/yyyy" ShowTime="false" TValue="DateTime?" @bind-Value="@SelectedDate" Change="@(() => OnDateChanged())" />
+                        <RadzenDatePicker Style="width:100%; border-radius:0;" class="" DateFormat="dd/MM/yyyy" ShowTime="false" TValue="DateTime?" @bind-Value="@SelectedDate" Change="@(() => OnDateChanged())" />
                     </div>
                 </RadzenColumn>
                 <RadzenColumn Size="4">
-                    <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" Icon="edit" Text="@(Math.Round(SelectedDay.Weight == null ? 0 : (decimal)SelectedDay.Weight,1).ToString()+" kg")" class="rz-shadow-10 w-100" Click="@(() => ShowEditBodyWeight=true)">
+                    <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" Icon="edit" Text="@(Math.Round(SelectedDay.BodyWeight == null ? 0 : (decimal)SelectedDay.BodyWeight,1).ToString()+" kg")" class="rz-shadow-10 w-100 " Click="@(() => ShowEditBodyWeight=true)">
 
                     </RadzenButton>
                 </RadzenColumn>
             </RadzenRow>
         </RadzenStack>
 
-        <RadzenCard class="rz-background-color-secondary-light p-0 m-0 p-1 mb-4">
+        <RadzenCard class="rz-background-color-secondary-light p-0 m-0 p-1 mb-4 ">
             <div style="display: flex; justify-content: space-between; gap: 0.3rem;">
-                <RadzenCard class="m-0 px-2 py-1" style="flex: 1;">
+                <RadzenCard class="m-0 px-2 py-1 " style="flex: 1;">
                     <RadzenText class="m-0 p-0" TextStyle="TextStyle.H6">@(Math.Round(SelectedDay.Calories))</RadzenText>
                     <RadzenText class="m-0 p-0" TextStyle="TextStyle.Overline">@("kcal")</RadzenText>
                 </RadzenCard>
-                <RadzenCard class="m-0 px-2 py-1" style="flex: 1;">
+                <RadzenCard class="m-0 px-2 py-1 " style="flex: 1;">
                     <RadzenText class="m-0 p-0" TextStyle="TextStyle.H6">@(Math.Round(SelectedDay.Carbohydrates) + " g")</RadzenText>
                     <RadzenText class="m-0 p-0" TextStyle="TextStyle.Overline">@("carbs")</RadzenText>
                 </RadzenCard>
-                <RadzenCard class="m-0 px-2 py-1" style="flex: 1;">
+                <RadzenCard class="m-0 px-2 py-1 " style="flex: 1;">
                     <RadzenText class="m-0 p-0" TextStyle="TextStyle.H6">@(Math.Round(SelectedDay.Fat) + " g")</RadzenText>
                     <RadzenText class="m-0 p-0" TextStyle="TextStyle.Overline">@("fat")</RadzenText>
                 </RadzenCard>
-                <RadzenCard class="m-0 px-2 py-1" style="flex: 1;">
+                <RadzenCard class="m-0 px-2 py-1 " style="flex: 1;">
                     <RadzenText class="m-0 p-0" TextStyle="TextStyle.H6">@(Math.Round(SelectedDay.Protein) + " g")</RadzenText>
                     <RadzenText class="m-0 p-0" TextStyle="TextStyle.Overline">@("protein")</RadzenText>
                 </RadzenCard>
@@ -62,9 +59,9 @@
                 <RadzenCard class="m-0 p-2" Style="overflow:auto">
                     <span class="rz-color-secondary">@(data.Meal.Name)</span><br>
                     <span class="rz-color-white">@(Math.Round(data.Calories, 2) + " kcal")</span><br>
-                    <span class="rz-color-white">@(Math.Round(data.Carbohydrates, 2) + " g carbohydrates")</span><br>
-                    <span class="rz-color-white">@(Math.Round(data.Fat, 2) + " g fat")</span><br>
-                    <span class="rz-color-white">@(Math.Round(data.Protein, 2) + " g protein")</span><br>
+                    <span class="rz-color-white">@(Math.Round(data.Carbohydrates, 2) + "g carbohydrates")</span><br>
+                    <span class="rz-color-white">@(Math.Round(data.Fat, 2) + "g fat")</span><br>
+                    <span class="rz-color-white">@(Math.Round(data.Protein, 2) + "g protein")</span><br>
                 </RadzenCard>
             </Template>
             <Columns>
@@ -82,7 +79,7 @@
         </RadzenDataGrid>
 
 
-        <RadzenButton Click=@(() => NewMeal()) Icon="add" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" class="rz-border-radius-0 rz-shadow-10 m-3 fixed-bottom" />
+        <RadzenButton Click=@(() => NewMeal()) Icon="add" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" class="rz-shadow-10 m-3 fixed-bottom" />
     }
     else if (ShowEditBodyWeight)
     {
@@ -92,7 +89,7 @@
                     <RadzenLabel class="rz-color-white" Text="Bodyweight (kg)" />
                 </RadzenColumn>
                 <RadzenColumn>
-                    <RadzenNumeric Style="width: 100%;" Name="Weight" @bind-Value="@(SelectedDay.Weight)" Min="0" Max="1000" />
+                    <RadzenNumeric Style="width: 100%;" Name="Weight" @bind-Value="@(SelectedDay.BodyWeight)" Min="0" Max="1000" />
                 </RadzenColumn>
             </RadzenRow>
 
@@ -127,9 +124,9 @@ else if (ShowEdit)
                 <RadzenCard class="m-0 p-2" Style="overflow:auto">
                     <span class="rz-color-secondary">@(data.Name)</span><br>
                     <span class="rz-color-white">@(Math.Round(data.Calories, 2) + " kcal / " + data.Weight + "g")</span><br>
-                    <span class="rz-color-white">@(Math.Round(data.Carbohydrates, 2) + " g carbohydrates / " + data.Weight + "g")</span><br>
-                    <span class="rz-color-white">@(Math.Round(data.Fat, 2) + " g fat / " + data.Weight + "g")</span><br>
-                    <span class="rz-color-white">@(Math.Round(data.Protein, 2) + " g protein / " + data.Weight + "g")</span><br>
+                    <span class="rz-color-white">@(Math.Round(data.Carbohydrates, 2) + "g carbohydrates / " + data.Weight + "g")</span><br>
+                    <span class="rz-color-white">@(Math.Round(data.Fat, 2) + "g fat / " + data.Weight + "g")</span><br>
+                    <span class="rz-color-white">@(Math.Round(data.Protein, 2) + "g protein / " + data.Weight + "g")</span><br>
                 </RadzenCard>
             </Template>
             <Columns>
@@ -167,7 +164,7 @@ else if (ShowEdit)
     private DateTime? SelectedDate { get; set; } = DateTime.Today;
     private IEnumerable<Day> Days { get; set; } = default!;
 
-    private Day? SelectedDay { get; set; }
+    private Day? SelectedDay { get; set; } 
     private Day EditDay { get; set; } = default!;
 
     private bool ShowEdit { get; set; }
@@ -186,7 +183,7 @@ else if (ShowEdit)
         OnDateChanged();
     }
 
-    private async void OnDateChanged()
+    private void OnDateChanged()
     {
         Days = DianabolService.GetDays();
 
@@ -199,13 +196,13 @@ else if (ShowEdit)
 
         if (Days.Any())
         {
-            var lastWeight = (Days.FirstOrDefault(x => x.Id == Days.Max(d => d.Id))).Weight;
+            var lastWeight = (Days.FirstOrDefault(x => x.Id == Days.Max(d => d.Id))).BodyWeight;
 
-            SelectedDay.Weight = SelectedDay.Weight == null ? lastWeight : SelectedDay.Weight;
+            SelectedDay.BodyWeight = SelectedDay.BodyWeight == null ? lastWeight : SelectedDay.BodyWeight;
         }
     }
 
-    private async Task NewMeal()
+    private void NewMeal()
     {
         AllMeals = DianabolService.GetMeals().ToList();
 
@@ -214,23 +211,25 @@ else if (ShowEdit)
         ShowEdit = true;
     }
 
-    private async Task RemoveMeal(DayRelation dayRelation)
+    private void RemoveMeal(DayRelation dayRelation)
     {
         DianabolService.RemoveDayRelation(dayRelation);
 
         OnDateChanged();
     }
 
-    private async Task SaveDay()
+    private void SaveDay()
     {
         DianabolService.MergeDay(SelectedDay);
 
+        var meal = SelectedMeals.FirstOrDefault();
+
         DianabolService.MergeDayRelation(new DayRelation()
             {
-                MealId = (int)SelectedMeals.FirstOrDefault().Id,
-                Amount = EditWeight,
+                MealId = (int)meal.Id,
+                RelAmount = EditWeight/meal.Weight,
                 DayId = SelectedDay.Id,
-                Meal = SelectedMeals.FirstOrDefault()
+                Meal = meal
             });
 
         ShowEdit = false;
@@ -239,7 +238,7 @@ else if (ShowEdit)
         OnDateChanged();
     }
 
-    private async Task SaveBodyWeight()
+    private void SaveBodyWeight()
     {
         DianabolService.MergeDay(SelectedDay);
         OnDateChanged();
@@ -247,7 +246,7 @@ else if (ShowEdit)
         ShowEditBodyWeight = false;
     }
 
-    private async Task CancelEdit()
+    private void CancelEdit()
     {
         ShowEdit = false;
         ShowEditWeight = false;
