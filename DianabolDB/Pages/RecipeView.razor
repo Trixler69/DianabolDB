@@ -72,13 +72,13 @@
             @*<RadzenDataGridColumn TItem="Meal" Property="Calories" Title="kcal" Width="90px" />*@
             <RadzenDataGridColumn TItem="Meal" Title="" Filterable="false" Width="100px" TextAlign="TextAlign.Center">
                 <Template Context="data">
-                    <RadzenButton Click=@(() => NewMeal(data)) Icon="edit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Medium" class="rz-border-radius-0 m-0 me-2" />
-                    <RadzenButton Click=@(() => RemoveMeal(data)) Icon="delete" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Medium" class="rz-border-radius-0 m-0" />
+                    <RadzenButton Click=@(() => NewMeal(data)) Icon="edit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Medium" class=" m-0 me-2" />
+                    <RadzenButton Click=@(() => RemoveMeal(data)) Icon="delete" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Medium" class=" m-0" />
                 </Template>
             </RadzenDataGridColumn>
         </Columns>
     </RadzenDataGrid>
-    <RadzenButton Click=@(args => NewMeal(new Meal() { SubMeals = Enumerable.Empty<MealRelation>() })) Icon="add" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" class="rz-border-radius-0 rz-shadow-10 fixed-bottom m-3" />
+    <RadzenButton Click=@(args => NewMeal(new Meal() { SubMeals = Enumerable.Empty<MealRelation>() })) Icon="add" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" class=" rz-shadow-10 fixed-bottom m-3" />
 }
 else
 {
@@ -160,17 +160,17 @@ else
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="int" Title="" Filterable="false" Width="50px" TextAlign="TextAlign.Center">
                         <Template Context="data">
-                            <RadzenButton Click=@(() => RemoveIngredient(data)) Icon="delete" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Medium" class="rz-border-radius-0 m-0" />
+                            <RadzenButton Click=@(() => RemoveIngredient(data)) Icon="delete" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Medium" class=" m-0" />
                         </Template>
                     </RadzenDataGridColumn>
                 </Columns>
             </RadzenDataGrid>
-            <RadzenButton Click=@(() => NewIngredient()) Icon="add" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" class="rz-border-radius-0 rz-shadow-10 mt-3 w-100" />
+            <RadzenButton Click=@(() => NewIngredient()) Icon="add" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" class=" rz-shadow-10 mt-3 w-100" />
 
 
             <RadzenStack Orientation="Radzen.Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" Class="fixed-bottom m-3">
-                <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Cancel" class="rz-border-radius-0 rz-shadow-10 w-50" Click="@(() => ShowEdit = !ShowEdit)" />
-                <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" Icon="save" Text="Save" class="rz-border-radius-0 rz-shadow-10 w-50" Disabled="@(!EditMeal.SubMeals.Any())" />
+                <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Cancel" class=" rz-shadow-10 w-50" Click="@(() => ShowEdit = !ShowEdit)" />
+                <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" Icon="save" Text="Save" class=" rz-shadow-10 w-50" Disabled="@(!EditMeal.SubMeals.Any())" />
             </RadzenStack>
         </RadzenTemplateForm>
     }
@@ -211,15 +211,15 @@ else
 
 
             <RadzenStack Orientation="Radzen.Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" Class="fixed-bottom m-3">
-                <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Cancel" class="rz-border-radius-0 rz-shadow-10 w-50" Click="@(() => CancelEdit())" />
-                <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" Icon="done" Text="Next" class="rz-border-radius-0 rz-shadow-10 w-50" Click="@(() => { ShowEditWeight = !ShowEditWeight; EditWeight = (int)SelectedMeals.FirstOrDefault().Weight; })" Disabled="@(SelectedMeals.Count == 0)" />
+                <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Cancel" class=" rz-shadow-10 w-50" Click="@(() => CancelEdit())" />
+                <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" Icon="done" Text="Next" class=" rz-shadow-10 w-50" Click="@(() => { ShowEditWeight = !ShowEditWeight; EditWeight = (int)SelectedMeals.FirstOrDefault().Weight; })" Disabled="@(SelectedMeals.Count == 0)" />
             </RadzenStack>
         }
         else
         {
             <RadzenRow AlignItems="AlignItems.Center">
                 <RadzenColumn>
-                    <RadzenLabel class="rz-color-white" Text="Weight" />
+                    <RadzenLabel class="rz-color-white" Text="Amount in g" />
                 </RadzenColumn>
                 <RadzenColumn>
                     <RadzenNumeric Style="width: 100%;" @bind-Value="@(EditWeight)" />
@@ -227,8 +227,8 @@ else
             </RadzenRow>
 
             <RadzenStack Orientation="Radzen.Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" Class="fixed-bottom m-3">
-                <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Cancel" class="rz-border-radius-0 rz-shadow-10 w-50" Click="@(() => CancelEdit())" />
-                <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" Icon="save" Text="Save" class="rz-border-radius-0 rz-shadow-10 w-50" Click="@(() => SaveIngredient())" />
+                <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Cancel" class=" rz-shadow-10 w-50" Click="@(() => CancelEdit())" />
+                <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" Icon="save" Text="Save" class=" rz-shadow-10 w-50" Click="@(() => SaveIngredient())" />
             </RadzenStack>
         }
     }
@@ -326,7 +326,6 @@ else
     {
         ShowEditIngredients = false;
         ShowEditWeight = false;
-
         Recipes = DianabolService.GetRecipes();
     }
 }

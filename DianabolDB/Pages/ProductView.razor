@@ -1,5 +1,7 @@
 ﻿@page "/products"
 
+@using CommunityToolkit.Maui.Views;
+@using DianabolDB.MauiPages;
 
 @inject IDianabolService DianabolService
 @inject IOpenFoodFactsService OpenFoodFactsService
@@ -9,34 +11,36 @@
 {
     <RadzenStack Gap="1rem" AlignItems="AlignItems.Stretch" Orientation="Radzen.Orientation.Vertical" JustifyContent="JustifyContent.SpaceBetween" class="h-100">
         <RadzenRow AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
-            <RadzenColumn>
-
-                <RadzenTextBox @bind-Value="@SearchString" Style="width: 100%;" class="rz-border-radius-0" />
+            <RadzenColumn Size="6">
+                <RadzenTextBox @bind-Value="@SearchString" Style="width: 100%;"/>
             </RadzenColumn>
-            <RadzenColumn Size="5">
-                <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Medium" Icon="search" Text="Search" class="rz-border-radius-0 rz-shadow-10 w-100" Click="@(async () => await SearchProduct())">
-
-                </RadzenButton>
+            <RadzenColumn Size="4">
+                <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Medium" Icon="search" Text="Search" class=" rz-shadow-10 w-100" Click="@(async () => await SearchProduct())" />
+            </RadzenColumn>
+            <RadzenColumn Size="2">
+                <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Medium" Icon="line_weight" class="rz-shadow-10 w-100" Click="OpenPopup" />
             </RadzenColumn>
         </RadzenRow>
 
-        <RadzenProgressBar Visible="@ShowLoading" Value="100" class="rz-border-radius-0 m-0 p-0" ShowValue="false" Mode="ProgressBarMode.Indeterminate" ProgressBarStyle="ProgressBarStyle.Secondary" />
+
+
+        <RadzenProgressBar Visible="@ShowLoading" Value="100" class=" m-0 p-0" ShowValue="false" Mode="ProgressBarMode.Indeterminate" ProgressBarStyle="ProgressBarStyle.Secondary" />
 
         <RadzenRow>
             <RadzenDataGrid AllowFiltering="true"
-                        AllowColumnResize="true"
-                        AllowAlternatingRows="false"
-                        FilterMode="FilterMode.Advanced"
-                        AllowSorting="true"
-                        PageSize="24"
-                        AllowPaging="true"
-                        PagerHorizontalAlign="HorizontalAlign.Left"
-                        ShowPagingSummary="true"
-                        Data="@Ingredients"
-                        TItem="Meal"
-                        LogicalFilterOperator="LogicalFilterOperator.Or"
-                        SelectionMode="DataGridSelectionMode.Single"
-                        ExpandMode="DataGridExpandMode.Multiple">
+                            AllowColumnResize="true"
+                            AllowAlternatingRows="false"
+                            FilterMode="FilterMode.Advanced"
+                            AllowSorting="true"
+                            PageSize="24"
+                            AllowPaging="true"
+                            PagerHorizontalAlign="HorizontalAlign.Left"
+                            ShowPagingSummary="true"
+                            Data="@Ingredients"
+                            TItem="Meal"
+                            LogicalFilterOperator="LogicalFilterOperator.Or"
+                            SelectionMode="DataGridSelectionMode.Single"
+                            ExpandMode="DataGridExpandMode.Multiple">
                 <Template Context="data">
                     <RadzenCard class="m-0 p-2" Style="overflow:auto">
                         <span class="rz-color-secondary">@(data.Name)</span><br>
@@ -51,7 +55,7 @@
                     @*<RadzenDataGridColumn TItem="Meal" Property="Calories" Title="kcal" Filterable="true" Width="85px" />*@
                     <RadzenDataGridColumn TItem="Meal" Title="" Filterable="false" Width="50px" TextAlign="TextAlign.Center">
                         <Template>
-                            <RadzenButton Click=@(() => NewMeal(context)) Icon="add" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Medium" class="rz-border-radius-0 m-0" />
+                            <RadzenButton Click=@(() => NewMeal(context)) Icon="add" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Medium" class=" m-0" />
                         </Template>
                     </RadzenDataGridColumn>
                 </Columns>
@@ -87,7 +91,7 @@ else
                     <RadzenLabel Text="Weight (g)" class="rz-color-white" />
                 </RadzenColumn>
                 <RadzenColumn>
-                    <RadzenNumeric Style="width: 100%;" @bind-Value="@EditMeal.Weight" />
+                    <RadzenNumeric TValue="double" Style="width: 100%;" Value="@EditMeal.Weight" ValueChanged="@((double weight) => OnWeightChange(weight))" />
                 </RadzenColumn>
             </RadzenRow>
             <RadzenRow AlignItems="AlignItems.Center">
@@ -125,8 +129,8 @@ else
         </RadzenStack>
 
         <RadzenStack Orientation="Radzen.Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" Class="fixed-bottom m-3">
-            <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Cancel" class="rz-border-radius-0 rz-shadow-10 w-50" Click="@(() => ShowEdit = !ShowEdit)" />
-            <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" Icon="save" Text="Save" class="rz-border-radius-0 rz-shadow-10 w-50" />
+            <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Cancel" class=" rz-shadow-10 w-50" Click="@(() => ShowEdit = !ShowEdit)" />
+            <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" Icon="save" Text="Save" class=" rz-shadow-10 w-50" />
         </RadzenStack>
     </RadzenTemplateForm>
 }
@@ -177,5 +181,56 @@ else
             NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Product loading failed", Detail = ex.Message, Duration = 4000 });
         }
         ShowLoading = false;
+    }
+
+    private void OnWeightChange(double weight)
+    {
+        var factor = weight / EditMeal.Weight;
+        EditMeal.Weight = weight;
+        EditMeal.Calories = EditMeal.Calories * factor;
+        EditMeal.Protein = EditMeal.Protein * factor;
+        EditMeal.Carbohydrates = EditMeal.Carbohydrates * factor;
+        EditMeal.Fat = EditMeal.Fat * factor;
+    }
+
+    private async void OpenPopup()
+    {
+        string code = "";
+        var popupPage = new MauiPopupPage()
+            {
+                CanBeDismissedByTappingOutsideOfPopup = false
+            };
+
+        var result = await App.Current.MainPage.ShowPopupAsync(popupPage);
+
+        if(result != null)
+        {
+            code = result?.ToString();
+        }
+        else
+        {
+            return;
+        }
+
+        try
+        {
+            var productapi = (await OpenFoodFactsService.FetchProductByCode(code))?.Product;
+            var product = new Meal()
+                {
+                    Name = productapi.Brands + " " + productapi.ProductName,
+                    Calories = productapi.Nutriments.EnergyKcal100g == null ? 0 : (Double)productapi.Nutriments.EnergyKcal100g,
+                    Carbohydrates = productapi.Nutriments.Carbohydrates100g == null ? 0 : (Double)productapi.Nutriments.Carbohydrates100g,
+                    Fat = productapi.Nutriments.Fat100g == null ? 0 : (Double)productapi.Nutriments.Fat100g,
+                    Weight = 100,
+                    Protein = productapi.Nutriments.Proteins100g == null ? 0 : (Double)productapi.Nutriments.Proteins100g
+                };
+            NewMeal(product);
+        }
+        catch (Exception ex)
+        {
+            NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Product loading failed", Detail = ex.Message, Duration = 4000 });
+        }
+
+        StateHasChanged();
     }
 }

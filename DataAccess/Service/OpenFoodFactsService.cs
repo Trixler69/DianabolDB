@@ -28,7 +28,7 @@ namespace DataAccess.Service
 
         public async Task<ProductResponse?> FetchProductByCode(string code)
         {
-            var response = await httpClient.GetAsync($"{apiUrl}/product/{code}.json");
+            var response = await httpClient.GetAsync($"https://world.openfoodfacts.org/api/v2/product/{code}.json");
             var stringContent = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
@@ -37,13 +37,13 @@ namespace DataAccess.Service
             throw new Exception(stringContent);
         }
 
-        public async Task<ProductResponse?> FetchProductByName(string name)
+        public async Task<ProductsResponse?> FetchProductByName(string name)
         {
             var response = await httpClient.GetAsync($"{apiUrl}search_terms={name}&search_simple=1&action=process&json=1");
             var stringContent = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return JsonSerializer.Deserialize<ProductResponse>(stringContent);
+                return JsonSerializer.Deserialize<ProductsResponse>(stringContent);
             }
             throw new Exception(stringContent);
         }

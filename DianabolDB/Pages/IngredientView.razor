@@ -25,9 +25,9 @@
             <RadzenCard class="m-0 p-2" Style="overflow:auto">
                 <span class="rz-color-secondary">@(data.Name)</span><br>
                 <span class="rz-color-white">@(Math.Round(data.Calories, 2) + " kcal / " + data.Weight + "g")</span><br>
-                <span class="rz-color-white">@(Math.Round(data.Carbohydrates, 2) + " g carbohydrates / " + data.Weight + "g")</span><br>
-                <span class="rz-color-white">@(Math.Round(data.Fat, 2) + " g fat / " + data.Weight + "g")</span><br>
-                <span class="rz-color-white">@(Math.Round(data.Protein, 2) + " g protein / " + data.Weight + "g")</span><br>
+                <span class="rz-color-white">@(Math.Round(data.Carbohydrates, 2) + "g carbohydrates / " + data.Weight + "g")</span><br>
+                <span class="rz-color-white">@(Math.Round(data.Fat, 2) + "g fat / " + data.Weight + "g")</span><br>
+                <span class="rz-color-white">@(Math.Round(data.Protein, 2) + "g protein / " + data.Weight + "g")</span><br>
             </RadzenCard>
         </Template>
         <Columns>
@@ -35,14 +35,14 @@
             <RadzenDataGridColumn TItem="Meal" Property="Calories" Title="kcal" Filterable="true" Width="85px" />
             <RadzenDataGridColumn TItem="Meal" Title="" Filterable="false" Width="100px" TextAlign="TextAlign.Center">
                 <Template>
-                    <RadzenButton Click=@(() => NewMeal(context)) Icon="edit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Medium" class="rz-border-radius-0 m-0 me-2" />
-                    <RadzenButton Click=@(() => RemoveMeal(context)) Icon="delete" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Medium" class="rz-border-radius-0 m-0" />
+                    <RadzenButton Click=@(() => NewMeal(context)) Icon="edit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Medium" class=" m-0 me-2" />
+                    <RadzenButton Click=@(() => RemoveMeal(context)) Icon="delete" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Medium" class=" m-0" />
                 </Template>
             </RadzenDataGridColumn>
         </Columns>
     </RadzenDataGrid>
 
-    <RadzenButton Click=@(args => NewMeal(new Meal())) Icon="add" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" class="rz-border-radius-0 rz-shadow-10 fixed-bottom m-3 " />
+    <RadzenButton Click=@(args => NewMeal(new Meal())) Icon="add" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" class=" rz-shadow-10 fixed-bottom m-3 " />
 
 }
 else
@@ -107,8 +107,8 @@ else
             </RadzenRow>
         </RadzenStack>
         <RadzenStack Orientation="Radzen.Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" Class="fixed-bottom m-3">
-            <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Cancel" class="rz-border-radius-0 rz-shadow-10 w-50" Click="@(() => ShowEdit = !ShowEdit)" />
-            <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" Icon="save" Text="Save" class="rz-border-radius-0 rz-shadow-10 w-50" />
+            <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Cancel" class=" rz-shadow-10 w-50" Click="@(() => ShowEdit = !ShowEdit)" />
+            <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" Icon="save" Text="Save" class=" rz-shadow-10 w-50" />
         </RadzenStack>
     </RadzenTemplateForm>
 }

@@ -4,7 +4,7 @@ namespace DataAccess.Model
 {
     public class ProductResponse
     {
-        [JsonPropertyName("products")]
-        public List<Product> Products { get; set; } = new List<Product>();
+        [JsonPropertyName("product")]
+        public Product Product { get; set; } = new Product();
     }
 }

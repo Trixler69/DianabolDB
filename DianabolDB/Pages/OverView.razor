@@ -72,7 +72,7 @@
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="DayRelation" Title="" Filterable="false" Width="50px" TextAlign="TextAlign.Center">
                     <Template Context="data">
-                        <RadzenButton Click=@(() => RemoveMeal(data)) Icon="delete" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Small" class="rz-border-radius-0 m-0" />
+                        <RadzenButton Click=@(() => RemoveMeal(data)) Icon="delete" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Small" class=" m-0" />
                     </Template>
                 </RadzenDataGridColumn>
             </Columns>
@@ -94,8 +94,8 @@
             </RadzenRow>
 
             <RadzenStack Orientation="Radzen.Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" Class="fixed-bottom m-3">
-                <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Cancel" class="rz-border-radius-0 rz-shadow-10 w-50" Click="@(() => CancelEdit())" />
-                <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" Icon="save" Text="Save" class="rz-border-radius-0 rz-shadow-10 w-50" Click="@(() => SaveBodyWeight())" />
+                <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Cancel" class=" rz-shadow-10 w-50" Click="@(() => CancelEdit())" />
+                <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" Icon="save" Text="Save" class=" rz-shadow-10 w-50" Click="@(() => SaveBodyWeight())" />
             </RadzenStack>
         </RadzenStack>
     }
@@ -137,8 +137,8 @@ else if (ShowEdit)
 
 
         <RadzenStack Orientation="Radzen.Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" Class="fixed-bottom m-3">
-            <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Cancel" class="rz-border-radius-0 rz-shadow-10 w-50" Click="@(() => CancelEdit())" />
-            <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" Icon="done" Text="Next" class="rz-border-radius-0 rz-shadow-10 w-50" Click="@(() => { ShowEditWeight = !ShowEditWeight; EditWeight = (int)SelectedMeals.FirstOrDefault().Weight; })" Disabled="@(SelectedMeals.Count == 0)" />
+            <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Cancel" class=" rz-shadow-10 w-50" Click="@(() => CancelEdit())" />
+            <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" Icon="done" Text="Next" class=" rz-shadow-10 w-50" Click="@(() => { ShowEditWeight = !ShowEditWeight; EditWeight = (int)SelectedMeals.FirstOrDefault().Weight; })" Disabled="@(SelectedMeals.Count == 0)" />
         </RadzenStack>
     }
     else
@@ -153,8 +153,8 @@ else if (ShowEdit)
         </RadzenRow>
 
         <RadzenStack Orientation="Radzen.Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" Class="fixed-bottom m-3">
-            <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Cancel" class="rz-border-radius-0 rz-shadow-10 w-50" Click="@(() => CancelEdit())" />
-            <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" Icon="save" Text="Save" class="rz-border-radius-0 rz-shadow-10 w-50" Click="@(() => SaveDay())" />
+            <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Cancel" class=" rz-shadow-10 w-50" Click="@(() => CancelEdit())" />
+            <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" Icon="save" Text="Save" class=" rz-shadow-10 w-50" Click="@(() => SaveDay())" />
         </RadzenStack>
     }
 }

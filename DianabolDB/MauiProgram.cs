@@ -3,6 +3,8 @@ using Radzen;
 using DataAccess.Service;
 using DataAccess.Interface;
 using Microsoft.Extensions.DependencyInjection;
+using ZXing.Net.Maui.Controls;
+using CommunityToolkit.Maui;
 
 namespace DianabolDB;
 
@@ -13,10 +15,13 @@ public static class MauiProgram
 		var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()
-			.ConfigureFonts(fonts =>
+            .UseMauiCommunityToolkit()
+			.UseBarcodeReader()
+            .ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 			});
+		
 
 		builder.Services.AddMauiBlazorWebView();
 
