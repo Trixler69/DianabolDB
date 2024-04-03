@@ -33,7 +33,6 @@ namespace DataAccess.Service
                 var meals = connection.Query<Meal>(sql);
 
                 meals.ForEach(meal => meal.SubMeals = GetMealRelations(meal.Id));
-
                 return meals;
             }
         }
@@ -96,8 +95,10 @@ namespace DataAccess.Service
             }
         }
 
-        private IEnumerable<DayRelation> GetDayRelations(int dayId)
+        private IEnumerable<DayRelation> GetDayRelations(int? dayId)
         {
+            if (dayId == null) { return Enumerable.Empty<DayRelation>(); }
+
             string sql = $@"SELECT * FROM {nameof(DayRelation)} where {nameof(DayRelation.DayId)} == ?";
 
             using (var connection = BuildConnection())
@@ -193,7 +194,29 @@ namespace DataAccess.Service
         {
             using (var connection = BuildConnection())
             {
+                connection.BeginTransaction();
                 connection.InsertOrReplace(day);
+                var rowID = (int)connection.ExecuteScalar<long>("select last_insert_rowid()");
+                connection.Commit();
+
+                var id = day.Id == null ? rowID : (int)day.Id;
+
+                day.Meals.ToList().ForEach(m => m.DayId = id);
+
+                if (day.Meals.Any())
+                {
+                    var dbRelations = GetDayRelations(id)?.ToList();
+
+                    dbRelations?.ForEach(r =>
+                    {
+                        if (!day.Meals.Where(m => m.Id == r.Id).Any())
+                        {
+                            connection.Delete(r);
+                        }
+                    });
+
+                    day.Meals.ToList().ForEach(m => connection.InsertOrReplace(m));
+                }
             }
         }
 
@@ -217,10 +240,10 @@ namespace DataAccess.Service
         {
             using (var connection = BuildConnection())
             {
-                connection.DropTable<Meal>();
-                connection.DropTable<Day>();
-                connection.DropTable<MealRelation>();
-                connection.DropTable<DayRelation>();
+                //connection.DropTable<Meal>();
+                //connection.DropTable<Day>();
+                //connection.DropTable<MealRelation>();
+                //connection.DropTable<DayRelation>();
 
                 connection.CreateTable<Meal>();
                 connection.CreateTable<MealRelation>();

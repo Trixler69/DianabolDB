@@ -32,43 +32,43 @@
     <AndroidPackageFormat>apk</AndroidPackageFormat>
     <ApplicationId>com.trixl.dianaboldb</ApplicationId>
     <ApplicationIdGuid>BEB749D0-606B-40E9-B2DB-26B59D5F4D0C</ApplicationIdGuid>
-    <ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
+    <ApplicationDisplayVersion>1.0.2</ApplicationDisplayVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android|AnyCPU'">
     <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
     <ApplicationId>com.trixl.dianaboldb</ApplicationId>
     <ApplicationIdGuid>BEB749D0-606B-40E9-B2DB-26B59D5F4D0C</ApplicationIdGuid>
-    <ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
+    <ApplicationDisplayVersion>1.0.2</ApplicationDisplayVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-maccatalyst|AnyCPU'">
     <ApplicationId>com.trixl.dianaboldb</ApplicationId>
     <ApplicationIdGuid>BEB749D0-606B-40E9-B2DB-26B59D5F4D0C</ApplicationIdGuid>
-    <ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
+    <ApplicationDisplayVersion>1.0.2</ApplicationDisplayVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
     <ApplicationId>com.trixl.dianaboldb</ApplicationId>
     <ApplicationIdGuid>BEB749D0-606B-40E9-B2DB-26B59D5F4D0C</ApplicationIdGuid>
-    <ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
+    <ApplicationDisplayVersion>1.0.2</ApplicationDisplayVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-windows10.0.19041.0|AnyCPU'">
     <ApplicationId>com.trixl.dianaboldb</ApplicationId>
     <ApplicationIdGuid>BEB749D0-606B-40E9-B2DB-26B59D5F4D0C</ApplicationIdGuid>
-    <ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
+    <ApplicationDisplayVersion>1.0.2</ApplicationDisplayVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-maccatalyst|AnyCPU'">
     <ApplicationId>com.trixl.dianaboldb</ApplicationId>
     <ApplicationIdGuid>BEB749D0-606B-40E9-B2DB-26B59D5F4D0C</ApplicationIdGuid>
-    <ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
+    <ApplicationDisplayVersion>1.0.2</ApplicationDisplayVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
     <ApplicationId>com.trixl.dianaboldb</ApplicationId>
     <ApplicationIdGuid>BEB749D0-606B-40E9-B2DB-26B59D5F4D0C</ApplicationIdGuid>
-    <ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
+    <ApplicationDisplayVersion>1.0.2</ApplicationDisplayVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-windows10.0.19041.0|AnyCPU'">
     <ApplicationId>com.trixl.dianaboldb</ApplicationId>
     <ApplicationIdGuid>BEB749D0-606B-40E9-B2DB-26B59D5F4D0C</ApplicationIdGuid>
-    <ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
+    <ApplicationDisplayVersion>1.0.2</ApplicationDisplayVersion>
   </PropertyGroup>
   <ItemGroup>
     <!-- App Icon -->

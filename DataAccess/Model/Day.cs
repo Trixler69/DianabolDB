@@ -10,7 +10,7 @@ namespace DataAccess.Model
     public class Day
     {
         [PrimaryKey, AutoIncrement]
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public DateTime Date { get; set; }
         [Ignore]
         public IEnumerable<DayRelation> Meals { get; set; } = Enumerable.Empty<DayRelation>();

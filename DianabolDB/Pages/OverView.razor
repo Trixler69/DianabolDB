@@ -118,7 +118,7 @@ else if (ShowEdit)
                         LogicalFilterOperator="LogicalFilterOperator.Or"
                         SelectionMode="DataGridSelectionMode.Single"
                         @bind-Value="SelectedMeals"
-                        Style="max-height:70vh;overflow:auto"
+                        Style="max-height:80vh;overflow:auto"
                         ExpandMode="DataGridExpandMode.Multiple">
             <Template Context="data">
                 <RadzenCard class="m-0 p-2" Style="overflow:auto">
@@ -224,13 +224,14 @@ else if (ShowEdit)
 
         var meal = SelectedMeals.FirstOrDefault();
 
-        DianabolService.MergeDayRelation(new DayRelation()
+        SelectedDay.Meals = SelectedDay.Meals.Append(new DayRelation()
             {
                 MealId = (int)meal.Id,
-                RelAmount = EditWeight/meal.Weight,
-                DayId = SelectedDay.Id,
+                RelAmount = EditWeight / meal.Weight,
                 Meal = meal
             });
+
+        DianabolService.MergeDay(SelectedDay);
 
         ShowEdit = false;
         ShowEditWeight = false;

@@ -34,7 +34,7 @@ namespace DataAccess.Service
             {
                 return JsonSerializer.Deserialize<ProductResponse>(stringContent);
             }
-            throw new Exception(stringContent);
+            throw new Exception("no product found");
         }
 
         public async Task<ProductsResponse?> FetchProductByName(string name)
