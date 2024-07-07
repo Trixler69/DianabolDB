@@ -3,12 +3,15 @@
 @inject IDianabolService DianabolService
 @inject NotificationService NotificationService
 
+<RadzenProgressBar Visible="@ShowLoading" Value="100" class=" m-0 p-0" ShowValue="false" Mode="ProgressBarMode.Indeterminate" ProgressBarStyle="ProgressBarStyle.Secondary" />
 
-<RadzenChart Style="color:white">
+@if (Days.Any())
+{
+    <RadzenChart Style="color:white">
     <RadzenLineSeries Data="@Days" CategoryProperty="Date" LineType="LineType.Dashed" ValueProperty="Calories" Title="Calories">
         <RadzenMarkers MarkerType="MarkerType.Circle" />
     </RadzenLineSeries>
-    <RadzenValueAxis Min="0" Max="6000" Step="500">
+    <RadzenValueAxis Min="0" Max="@(Days.Max(d => d.Calories))" Step="500">
         <RadzenGridLines Visible="true" />
     </RadzenValueAxis>
     <RadzenLegend Position="LegendPosition.Bottom" />
@@ -18,7 +21,7 @@
     <RadzenLineSeries Data="@Days" CategoryProperty="Date" LineType="LineType.Dashed" ValueProperty="BodyWeight" Title="Weight">
         <RadzenMarkers MarkerType="MarkerType.Circle" />
     </RadzenLineSeries>
-    <RadzenValueAxis Min="50" Max="100" Step="5">
+    <RadzenValueAxis Min="0" Max="@(Days.Max(d => d.BodyWeight))" Step="5">
         <RadzenGridLines Visible="true" />
     </RadzenValueAxis>
     <RadzenLegend Position="LegendPosition.Bottom" />
@@ -28,7 +31,7 @@
     <RadzenLineSeries Data="@Days" CategoryProperty="Date" LineType="LineType.Dashed" ValueProperty="Protein" Title="Protein"><RadzenMarkers MarkerType="MarkerType.Circle" /></RadzenLineSeries>
     <RadzenLineSeries Data="@Days" CategoryProperty="Date" LineType="LineType.Dashed" ValueProperty="Fat" Title="Fat"><RadzenMarkers MarkerType="MarkerType.Circle" /></RadzenLineSeries>
     <RadzenLineSeries Data="@Days" CategoryProperty="Date" LineType="LineType.Dashed" ValueProperty="Carbohydrates" Title="Carbohydrates"><RadzenMarkers MarkerType="MarkerType.Circle" /></RadzenLineSeries>
-    <RadzenValueAxis Min="0" Max="300" Step="25">
+    <RadzenValueAxis Min="0" Max="@((new List<double>(){Days.Max(d => d.Protein), Days.Max(d => d.Fat), Days.Max(d => d.Carbohydrates)}).Max())" Step="50">
         <RadzenGridLines Visible="true" />
     </RadzenValueAxis>
     <RadzenLegend Position="LegendPosition.Bottom" />
@@ -63,18 +66,24 @@
         <RadzenDataGridColumn TItem="Day" Property="Calories" Title="kcal" Filterable="true" />
         <RadzenDataGridColumn TItem="Day" Property="BodyWeight" Title="weight" Filterable="true" />
     </Columns>
-</RadzenDataGrid>
-
+    </RadzenDataGrid>
+}
+else
+{
+    <RadzenText class="m-0 p-0 rz-cell-data">no data yet</RadzenText>
+}
 
 @code {
-    private IEnumerable<Day> Days { get; set; }
+    private IEnumerable<Day> Days { get; set; } = Enumerable.Empty<Day>();
+    private bool ShowLoading { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-
+        ShowLoading = true;
         Days = DianabolService.GetDays();
         Days.Where(d => d.BodyWeight == null).ToList().ForEach(d => d.BodyWeight = 0);
+        ShowLoading = false;
     }
 
 }

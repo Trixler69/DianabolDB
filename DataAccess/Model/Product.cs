@@ -13,6 +13,8 @@ namespace DataAccess.Model
         public string Id { get; set; } = string.Empty;
         [JsonPropertyName("product_name")]
         public string ProductName { get; set; } = string.Empty;
+        [JsonPropertyName("product_quantity")]
+        public string? ProductQuantity { get; set; } = string.Empty;
         [JsonPropertyName("nutriments")]
         public Nutriments? Nutriments { get; set; }
         [JsonPropertyName("brands")]

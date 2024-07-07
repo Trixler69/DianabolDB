@@ -7,32 +7,37 @@
 {
 
     <RadzenDataGrid AllowFiltering="true"
-                AllowColumnResize="true"
-                AllowAlternatingRows="false"
-                FilterMode="FilterMode.Advanced"
-                AllowSorting="true"
-                PageSize="20"
-                AllowPaging="false"
-                PagerHorizontalAlign="HorizontalAlign.Left"
-                ShowPagingSummary="true"
-                Data="@Ingredients"
-                TItem="Meal"
-                LogicalFilterOperator="LogicalFilterOperator.Or"
-                SelectionMode="DataGridSelectionMode.Single"
-                Style="max-height:80vh;overflow:auto"
-                ExpandMode="DataGridExpandMode.Multiple">
+                    AllowColumnResize="true"
+                    AllowAlternatingRows="false"
+                    FilterMode="FilterMode.Advanced"
+                    AllowSorting="true"
+                    PageSize="20"
+                    AllowPaging="false"
+                    PagerHorizontalAlign="HorizontalAlign.Left"
+                    ShowPagingSummary="true"
+                    Data="@Ingredients"
+                    TItem="Meal"
+                    LogicalFilterOperator="LogicalFilterOperator.Or"
+                    SelectionMode="DataGridSelectionMode.Single"
+                    Style="max-height:80vh;overflow:auto"
+                    ExpandMode="DataGridExpandMode.Multiple">
         <Template Context="data">
-            <RadzenCard class="m-0 p-2" Style="overflow:auto">
-                <span class="rz-color-secondary">@(data.Name)</span><br>
-                <span class="rz-color-white">@(Math.Round(data.Calories, 2) + " kcal / " + data.Weight + "g")</span><br>
-                <span class="rz-color-white">@(Math.Round(data.Carbohydrates, 2) + "g carbohydrates / " + data.Weight + "g")</span><br>
-                <span class="rz-color-white">@(Math.Round(data.Fat, 2) + "g fat / " + data.Weight + "g")</span><br>
-                <span class="rz-color-white">@(Math.Round(data.Protein, 2) + "g protein / " + data.Weight + "g")</span><br>
-            </RadzenCard>
+            <div class="m-0 p-0 pb-0" Style="overflow:auto">
+                <MealComponent Meal="@data"></MealComponent>
+            </div>
         </Template>
         <Columns>
-            <RadzenDataGridColumn TItem="Meal" Property="Name" Title="Name" Filterable="true" />
-            <RadzenDataGridColumn TItem="Meal" Property="Calories" Title="kcal" Filterable="true" Width="85px" />
+            <RadzenDataGridColumn TItem="Meal" Property="Name" Title="Name" Filterable="true" CssClass="pt-0 pb-0">
+                <Template Context="data">
+                    <RadzenText class="m-0 p-0 rz-cell-data">@(data.Name)</RadzenText>
+                    <RadzenText class="m-0 p-0" TextStyle="TextStyle.Caption">@(Math.Round(data.Weight, 2) + "g")</RadzenText>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Meal" Property="Calories" Title="kcal" Filterable="false" Width="65px">
+                <Template Context="data">
+                    @(Math.Round(data.Calories, 2))
+                </Template>
+            </RadzenDataGridColumn>
             <RadzenDataGridColumn TItem="Meal" Title="" Filterable="false" Width="100px" TextAlign="TextAlign.Center">
                 <Template>
                     <RadzenButton Click=@(() => NewMeal(context)) Icon="edit" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Medium" class=" m-0 me-2" />
@@ -70,7 +75,7 @@ else
                     <RadzenLabel Text="Weight (g)" class="rz-color-white" />
                 </RadzenColumn>
                 <RadzenColumn>
-                    <RadzenNumeric TValue="double" Style="width: 100%;" Value="@EditMeal.Weight" ValueChanged="@((double weight) => OnWeightChange(weight))"/>
+                    <RadzenNumeric TValue="double" Style="width: 100%;" Value="@EditMeal.Weight" ValueChanged="@((double weight) => OnWeightChange(weight))" />
                 </RadzenColumn>
             </RadzenRow>
             <RadzenRow AlignItems="AlignItems.Center">

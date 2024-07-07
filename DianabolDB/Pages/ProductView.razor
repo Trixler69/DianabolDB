@@ -42,13 +42,9 @@
                             SelectionMode="DataGridSelectionMode.Single"
                             ExpandMode="DataGridExpandMode.Multiple">
                 <Template Context="data">
-                    <RadzenCard class="m-0 p-2" Style="overflow:auto">
-                        <span class="rz-color-secondary">@(data.Name)</span><br>
-                        <span class="rz-color-white">@(Math.Round(data.Calories, 2) + " kcal / " + data.Weight + "g")</span><br>
-                        <span class="rz-color-white">@(Math.Round(data.Carbohydrates, 2) + "g carbohydrates / " + data.Weight + "g")</span><br>
-                        <span class="rz-color-white">@(Math.Round(data.Fat, 2) + "g fat / " + data.Weight + "g")</span><br>
-                        <span class="rz-color-white">@(Math.Round(data.Protein, 2) + "g protein / " + data.Weight + "g")</span><br>
-                    </RadzenCard>
+                    <div class="m-0 p-0 pb-0" Style="overflow:auto">
+                        <MealComponent Meal="@data"></MealComponent>
+                    </div>
                 </Template>
                 <Columns>
                     <RadzenDataGridColumn TItem="Meal" Property="Name" Title="Name" Filterable="true" />
@@ -136,101 +132,4 @@ else
 }
 
 
-@code {
-    private IEnumerable<Meal> Ingredients { get; set; }
-    private Meal EditMeal { get; set; }
-    private bool ShowEdit { get; set; }
-    private string SearchString { get; set; }
-    private bool ShowLoading { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-    }
-
-    private void NewMeal(Meal meal)
-    {
-        EditMeal = meal;
-        ShowEdit = true;
-    }
-
-    private void SaveMeal(Meal meal)
-    {
-        DianabolService.MergeMeal(meal);
-        ShowEdit = false;
-    }
-
-    private async Task SearchProduct()
-    {
-
-        try
-        {
-            ShowLoading = true;
-            Ingredients = (await OpenFoodFactsService.FetchProductByName(SearchString))?.Products.Select(p => new Meal()
-                {
-                    Name = p.Brands + " " + p.ProductName,
-                    Calories = p.Nutriments.EnergyKcal100g == null ? 0 : (Double)p.Nutriments.EnergyKcal100g,
-                    Carbohydrates = p.Nutriments.Carbohydrates100g == null ? 0 : (Double)p.Nutriments.Carbohydrates100g,
-                    Fat = p.Nutriments.Fat100g == null ? 0 : (Double)p.Nutriments.Fat100g,
-                    Weight = 100,
-                    Protein = p.Nutriments.Proteins100g == null ? 0 : (Double)p.Nutriments.Proteins100g
-                });
-        }
-        catch (Exception ex)
-        {
-            NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Product loading failed", Detail = ex.Message, Duration = 4000 });
-        }
-        ShowLoading = false;
-    }
-
-    private void OnWeightChange(double weight)
-    {
-        var factor = weight / EditMeal.Weight;
-        EditMeal.Weight = weight;
-        EditMeal.Calories = EditMeal.Calories * factor;
-        EditMeal.Protein = EditMeal.Protein * factor;
-        EditMeal.Carbohydrates = EditMeal.Carbohydrates * factor;
-        EditMeal.Fat = EditMeal.Fat * factor;
-    }
-
-    private async void OpenPopup()
-    {
-        string code = "";
-        var popupPage = new MauiPopupPage()
-            {
-                CanBeDismissedByTappingOutsideOfPopup = false
-            };
-
-        var result = await App.Current.MainPage.ShowPopupAsync(popupPage);
-
-        if(result != null)
-        {
-            code = result?.ToString();
-        }
-        else
-        {
-            return;
-        }
-
-        try
-        {
-            var productapi = (await OpenFoodFactsService.FetchProductByCode(code))?.Product;
-            var product = new Meal()
-                {
-                    Name = productapi.Brands + " " + productapi.ProductName,
-                    Calories = productapi.Nutriments.EnergyKcal100g == null ? 0 : (Double)productapi.Nutriments.EnergyKcal100g,
-                    Carbohydrates = productapi.Nutriments.Carbohydrates100g == null ? 0 : (Double)productapi.Nutriments.Carbohydrates100g,
-                    Fat = productapi.Nutriments.Fat100g == null ? 0 : (Double)productapi.Nutriments.Fat100g,
-                    Weight = 100,
-                    Protein = productapi.Nutriments.Proteins100g == null ? 0 : (Double)productapi.Nutriments.Proteins100g
-                };
-            NewMeal(product);
-        }
-        catch (Exception ex)
-        {
-            NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Product loading failed", Detail = ex.Message, Duration = 4000 });
-        }
-
-        StateHasChanged();
-    }
-}

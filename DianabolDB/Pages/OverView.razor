@@ -1,5 +1,7 @@
 ﻿@page "/"
 
+
+
 @inject IDianabolService DianabolService
 @inject DialogService DialogService
 
@@ -56,18 +58,20 @@
                         Style="max-height:60vh;overflow:auto"
                         ExpandMode="DataGridExpandMode.Multiple">
             <Template Context="data">
-                <RadzenCard class="m-0 p-2" Style="overflow:auto">
-                    <span class="rz-color-secondary">@(data.Meal.Name)</span><br>
-                    <span class="rz-color-white">@(Math.Round(data.Calories, 2) + " kcal")</span><br>
-                    <span class="rz-color-white">@(Math.Round(data.Carbohydrates, 2) + "g carbohydrates")</span><br>
-                    <span class="rz-color-white">@(Math.Round(data.Fat, 2) + "g fat")</span><br>
-                    <span class="rz-color-white">@(Math.Round(data.Protein, 2) + "g protein")</span><br>
-                </RadzenCard>
+                <div class="m-0 p-0" Style="overflow:auto">
+                    <DayRelationComponent Meal="@data"></DayRelationComponent>
+                </div>
             </Template>
             <Columns>
-                <RadzenDataGridColumn TItem="DayRelation" Property="Meal.Name" Title="Name">
+                <RadzenDataGridColumn TItem="DayRelation" Property="Meal.Name" Title="Name" CssClass="pt-0 pb-0">
                     <Template Context="data">
-                        @(data.Amount + "g " + data.Meal.Name)
+                        <RadzenText class="m-0 p-0 rz-cell-data">@(data.Meal.Name)</RadzenText>
+                        <RadzenText class="m-0 p-0" TextStyle="TextStyle.Caption">@(Math.Round(data.Amount, 2) + "g")</RadzenText>
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DayRelation" Property="Calories" Title="kcal" Filterable="false" Width="70px">
+                    <Template Context="data">
+                        @(Math.Round(data.Calories, 2))
                     </Template>
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="DayRelation" Title="" Filterable="false" Width="50px" TextAlign="TextAlign.Center">
@@ -78,6 +82,14 @@
             </Columns>
         </RadzenDataGrid>
 
+
+
+        @* <div style="max-height:60vh;overflow:auto">
+            @foreach (var rel in SelectedDay.Meals)
+            {
+                <MealComponent Meal="@(rel)" />
+            }
+        </div> *@
 
         <RadzenButton Click=@(() => NewMeal()) Icon="add" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Large" class="rz-shadow-10 m-3 fixed-bottom" />
     }
@@ -121,13 +133,9 @@ else if (ShowEdit)
                         Style="max-height:80vh;overflow:auto"
                         ExpandMode="DataGridExpandMode.Multiple">
             <Template Context="data">
-                <RadzenCard class="m-0 p-2" Style="overflow:auto">
-                    <span class="rz-color-secondary">@(data.Name)</span><br>
-                    <span class="rz-color-white">@(Math.Round(data.Calories, 2) + " kcal / " + data.Weight + "g")</span><br>
-                    <span class="rz-color-white">@(Math.Round(data.Carbohydrates, 2) + "g carbohydrates / " + data.Weight + "g")</span><br>
-                    <span class="rz-color-white">@(Math.Round(data.Fat, 2) + "g fat / " + data.Weight + "g")</span><br>
-                    <span class="rz-color-white">@(Math.Round(data.Protein, 2) + "g protein / " + data.Weight + "g")</span><br>
-                </RadzenCard>
+                <div class="m-0 p-0" Style="overflow:auto">
+                    <MealComponent Meal="@data"></MealComponent>
+                </div>
             </Template>
             <Columns>
                 <RadzenDataGridColumn TItem="Meal" Property="Name" Title="Name" Filterable="true" />
@@ -164,7 +172,7 @@ else if (ShowEdit)
     private DateTime? SelectedDate { get; set; } = DateTime.Today;
     private IEnumerable<Day> Days { get; set; } = default!;
 
-    private Day? SelectedDay { get; set; } 
+    private Day? SelectedDay { get; set; }
     private Day EditDay { get; set; } = default!;
 
     private bool ShowEdit { get; set; }

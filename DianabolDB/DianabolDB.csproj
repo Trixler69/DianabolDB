@@ -29,16 +29,21 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android|AnyCPU'">
     <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
-    <AndroidPackageFormat>apk</AndroidPackageFormat>
+    <AndroidPackageFormat>aab</AndroidPackageFormat>
     <ApplicationId>com.trixl.dianaboldb</ApplicationId>
     <ApplicationIdGuid>BEB749D0-606B-40E9-B2DB-26B59D5F4D0C</ApplicationIdGuid>
     <ApplicationDisplayVersion>1.0.2</ApplicationDisplayVersion>
+    <AndroidUseAapt2>True</AndroidUseAapt2>
+    <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android|AnyCPU'">
     <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
     <ApplicationId>com.trixl.dianaboldb</ApplicationId>
     <ApplicationIdGuid>BEB749D0-606B-40E9-B2DB-26B59D5F4D0C</ApplicationIdGuid>
     <ApplicationDisplayVersion>1.0.2</ApplicationDisplayVersion>
+    <AndroidUseAapt2>True</AndroidUseAapt2>
+    <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
+    <AndroidPackageFormat>aab</AndroidPackageFormat>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-maccatalyst|AnyCPU'">
     <ApplicationId>com.trixl.dianaboldb</ApplicationId>

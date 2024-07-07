@@ -1,0 +1,31 @@
+﻿
+
+
+    <div style="display: flex; justify-content: space-between; gap: 0.3rem;" class="pb-1">
+        <RadzenCard class="m-0 px-2 py-1 w-100">
+            <RadzenText class="m-0 p-0 rz-cell-data rz-color-secondary">@(Math.Round(Meal.Amount, 2) + "g " + Meal.SubMeal.Name)</RadzenText>
+        </RadzenCard>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; gap: 0.3rem;">
+        <RadzenCard class="m-0 px-2 py-0" style="flex: 1;">
+            <RadzenText class="m-0 p-0 rz-cell-data">@(Math.Round(Meal.Calories))</RadzenText>
+            <RadzenText class="m-0 p-0" TextStyle="TextStyle.Overline">@("kcal")</RadzenText>
+        </RadzenCard>
+        <RadzenCard class="m-0 px-2 py-0" style="flex: 1;">
+            <RadzenText class="m-0 p-0 rz-cell-data">@(Math.Round(Meal.Carbohydrates) + " g")</RadzenText>
+            <RadzenText class="m-0 p-0" TextStyle="TextStyle.Overline">@("carbs")</RadzenText>
+        </RadzenCard>
+        <RadzenCard class="m-0 px-2 py-0" style="flex: 1;">
+            <RadzenText class="m-0 p-0 rz-cell-data">@(Math.Round(Meal.Fat) + " g")</RadzenText>
+            <RadzenText class="m-0 p-0" TextStyle="TextStyle.Overline">@("fat")</RadzenText>
+        </RadzenCard>
+        <RadzenCard class="m-0 px-2 py-0" style="flex: 1;">
+            <RadzenText class="m-0 p-0 rz-cell-data">@(Math.Round(Meal.Protein) + " g")</RadzenText>
+            <RadzenText class="m-0 p-0" TextStyle="TextStyle.Overline">@("protein")</RadzenText>
+        </RadzenCard>
+    </div>
+
+
+
+
